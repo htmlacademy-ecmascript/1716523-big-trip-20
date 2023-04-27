@@ -28,7 +28,7 @@ function createHeaderFormTemplate () {
   );
 }
 
-export default class HeaderFormView {
+export default class HeaderFiltersView {
   getTemplate () {
     return createHeaderFormTemplate ();
   }
