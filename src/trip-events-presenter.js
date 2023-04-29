@@ -1,7 +1,7 @@
-import { render } from '../render';
-import TripEventsListView from './trip-events-list-view.js';
-import TripEventsEditItemView from './trip-events-edit-item-view.js';
-import TripEventsItemView from './trip-events-item-view.js';
+import { render } from './render';
+import TripEventsListView from './view/trip-events-list-view';
+import TripEventsEditItemView from './view/trip-events-edit-item-view.js';
+import TripEventsItemView from './view/trip-events-item-view.js';
 
 export default class TripEventsListPresenter {
   tripEventsList = new TripEventsListView();

@@ -1,7 +1,7 @@
 import HeaderFiltersView from './view/header-form-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import TripSortView from './view/trip-sort-view.js';
-import TripEventsListPresenter from './view/trip-events-presenter.js';
+import TripEventsListPresenter from './trip-events-presenter.js';
 import { render, RenderPosition } from './render.js';
 
 const siteHeaderElement = document.querySelector('.page-header');
