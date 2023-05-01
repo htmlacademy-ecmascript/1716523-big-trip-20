@@ -9,7 +9,7 @@ const mockPoints = [
     destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e04',
     isFavorite: false,
     offers: ['b4c3e4e6-9053-42ce-b747-e281314baa31'],
-    type: 'taxi'
+    type: 'taxi',
   },
 
 ];
