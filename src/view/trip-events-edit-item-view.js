@@ -1,8 +1,6 @@
 import { createElement } from '../render';
-import { editEventsDate, editEventsTime, editFullDate } from '../utils';
-import PhotoesContainer from './event-photoes-container-view';
+import { editFullDate } from '../utils';
 
-// const photosContainer = new PhotoesContainer();
 
 function createTripEventsEditItemTemplate (event, offerObj, destination) {
 
@@ -10,20 +8,12 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
   const dateTo = event.point.dateTo;
   const editedFullDateFrom = editFullDate(dateFrom);
   const editedFullDateTo = editFullDate(dateTo);
-  const editedDate = editEventsDate(dateFrom);
-  const editedTimeFrom = editEventsTime(dateFrom);
-  const editedTimeTo = editEventsTime(dateTo);
   const basePrice = event.point.basePrice;
-  const eventType = offerObj.type;
+  const eventType = event.point.type;
   const city = destination.name;
-
-  console.log(destination, 'rrr')
-  console.log(offerObj, 'ooo')
-  console.log(event, 'mmm')
 
 
   function createPhotoeTemplate (photoes) {
-    console.log(photoes, 'ddd')
     return photoes.map((photo) =>`<img class="event__photo" src="${photo.src}" alt="event photo">`).join('') ;
   }
 
@@ -58,7 +48,7 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
 
             <div class="event__type-item">
               <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
+              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">${eventType}</label>
             </div>
 
             <div class="event__type-item">

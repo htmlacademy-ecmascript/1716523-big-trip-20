@@ -1,9 +1,8 @@
 import { CITTES, DESCRIPTIONS } from '../const';
-import { createUniqId, getRandomArrayElement } from '../utils';
-
-const uniqueId = createUniqId(1,10)();
+import { getRandomArrayElement, getRandomInteger } from '../utils';
 
 function generateDestinationObj() {
+  const uniqueId = getRandomInteger(1,10);
   const city = getRandomArrayElement(CITTES);
   const description = getRandomArrayElement(DESCRIPTIONS);
 
@@ -15,10 +14,14 @@ function generateDestinationObj() {
       {
         'src': `https://loremflickr.com/248/152?${uniqueId}`,
         'description': `${city} ${description}`
+      },
+      {
+        'src': `https://loremflickr.com/248/152?${uniqueId}`,
+        'description': `${city} ${description}`
       }
     ]
   };
 }
 
 
-export {generateDestinationObj, uniqueId};
+export {generateDestinationObj};

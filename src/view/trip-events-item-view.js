@@ -1,15 +1,25 @@
 import { createElement } from '../render';
 import { editEventsDate, editEventsTime } from '../utils';
 
-function createTripEventsItemTemplate (event, offer, destination) {
+function createTripEventsItemTemplate (event, offerObj, destination) {
   const dateFrom = event.point.dateFrom;
   const dateTo = event.point.dateTo;
   const editedDate = editEventsDate(dateFrom);
   const editedTimeFrom = editEventsTime(dateFrom);
   const editedTimeTo = editEventsTime(dateTo);
   const basePrice = event.point.basePrice;
-  const eventType = offer.type;
+  const eventType = event.point.type;
   const city = destination.name;
+
+
+  function createOfferTemplate(offers) {
+    return offers.map((offer) =>
+      `<li class="event__offer">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer.price}</span>
+      </li>`).join('');
+  }
 
   return (`<li class="trip-events__item">
   <div class="event">
@@ -31,11 +41,7 @@ function createTripEventsItemTemplate (event, offer, destination) {
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      <li class="event__offer">
-        <span class="event__offer-title">Order Uber</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">20</span>
-      </li>
+    ${ createOfferTemplate(offerObj.offers)}
     </ul>
     <button class="event__favorite-btn event__favorite-btn--active" type="button">
       <span class="visually-hidden">Add to favorite</span>

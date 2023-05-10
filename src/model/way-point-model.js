@@ -1,15 +1,3 @@
-import { generatePoint } from '../mock/generate-point-mock.js';
-import {getRandomWayPoint} from '../mock/way-points.js';
-
-const POINTS_COUNT = 5;
-
-// export default class PointsModel {
-//   points = Array.from({length: POINTS_COUNT}, generatePoint);
-
-//   getPoints() {
-//     return this.points;
-//   }
-// }
 
 export default class PointsModel {
   constructor (service) {
@@ -23,9 +11,9 @@ export default class PointsModel {
     return this.offers;
   }
 
-  getByType(type) {
-    return this.offers.find((offer) => offer.type === type).offers;
-  }
+  // getByType(type) {
+  //   return this.offers.find((offer) => offer.type === type).offers;
+  // } Я не пойму как оно работатет %)
 
   getDestinations() {
     return this.destinations;
