@@ -8,7 +8,7 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
   const editedTimeFrom = editEventsTime(dateFrom);
   const editedTimeTo = editEventsTime(dateTo);
   const basePrice = event.point.basePrice;
-  const eventType = event.point.type;
+  const eventType = event.point.type.toLowerCase();
   const city = destination.name;
 
 
