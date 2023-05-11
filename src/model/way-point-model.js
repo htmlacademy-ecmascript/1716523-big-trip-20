@@ -1,19 +1,18 @@
 
 export default class PointsModel {
-  constructor (service) {
-    this.service = service;
-    this.offers = this.service.generateOffers();
-    this.destinations = this.service.generateDestinations();
-    this.points = this.service.generatePoints();
+  constructor (offers, destinations, points) {
+    this.offers = offers;
+    this.destinations = destinations;
+    this.points = points;
   }
 
   getOffers() {
     return this.offers;
   }
 
-  // getByType(type) {
-  //   return this.offers.find((offer) => offer.type === type).offers;
-  // } Я не пойму как оно работатет %)
+  getByType(type) {
+    return this.offers.find((offer) => offer.type === type).offers;
+  }
 
   getDestinations() {
     return this.destinations;

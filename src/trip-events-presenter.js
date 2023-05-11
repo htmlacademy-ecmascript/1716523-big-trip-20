@@ -21,9 +21,11 @@ export default class TripEventsListPresenter {
     render (this.tripEventsList, this.listContainer);
     for (let i = 0; i < this.points.length; i++) {
       if (i === 0) {
-        render (new TripEventsEditItemView({point: this.points[i]}, { ...this.offers[i]}, {...this.destinations[i]}), this.tripEventsList.getElement());
+        const currentOffer = this.offers.find((offer) => offer.type === this.points[i].type);
+        render (new TripEventsEditItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]}), this.tripEventsList.getElement());
       } else {
-        render (new TripEventsItemView({point: this.points[i]}, { ...this.offers[i]}, {...this.destinations[i]}), this.tripEventsList.getElement());
+        const currentOffer = this.offers.find((offer) => offer.type === this.points[i].type);
+        render (new TripEventsItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]}), this.tripEventsList.getElement());
       }
     }
     render (new PhotoeTemplate(...this.destinations), this.photoesContainer.getElement());

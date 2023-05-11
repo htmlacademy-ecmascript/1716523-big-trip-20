@@ -1,5 +1,4 @@
 import { getRandomInteger, getRandomNumber } from '../utils';
-// import { uniqueId } from './destination-mock';
 
 function generatePoint (pointType, destinationId, offersIds) {
   return {

@@ -24,12 +24,12 @@ function editEventsTime (eventsDate) {
   return dayjs(eventsDate).format(TIME_FORMAT);
 }
 
-// function createUniqId () {
-//   let uniqId = 1;
-//   return function () {
-//     return uniqId++;
-//   };
-// }
+function createUniqIdAcc () {
+  let uniqId = 1;
+  return function () {
+    return uniqId++;
+  };
+}
 
 const getRandomInteger = (a, b) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -52,4 +52,4 @@ function createUniqId (min, max) {
 }
 
 
-export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate};
+export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate, createUniqIdAcc};

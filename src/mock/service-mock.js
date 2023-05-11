@@ -9,27 +9,14 @@ const OFFER_COUNT = 5;
 const POINTS_COUNT = 5;
 
 export default class MockService {
-  destinations = [];
-  offers = [];
-  points = [];
+  #destinations = this.generateDestinations();
+  offers = this.generateOffers();
+  points = this.generatePoints();
 
-  constructor () {
-    this.destinations = this.generateDestinations();
-    this.offers = this.generateOffers();
-    this.points = this.generatePoints();
+  get destinations() {
+    return this.#destinations;
   }
 
-  getDestinations() {
-    return this.destinations;
-  }
-
-  getOffers() {
-    return this.offers;
-  }
-
-  getPoints() {
-    return this.points;
-  }
 
   generateDestinations() {
     return Array.from({length: DESTINATION_COUNT}, () => generateDestinationObj());
