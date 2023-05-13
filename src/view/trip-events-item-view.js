@@ -1,31 +1,47 @@
 import { createElement } from '../render';
+import { editEventsDate, editEventsTime } from '../utils';
 
-function createTripEventsItemTemplate () {
+function createTripEventsItemTemplate (event, offerObj, destination) {
+  const dateFrom = event.point.dateFrom;
+  const dateTo = event.point.dateTo;
+  const editedDate = editEventsDate(dateFrom);
+  const editedTimeFrom = editEventsTime(dateFrom);
+  const editedTimeTo = editEventsTime(dateTo);
+  const basePrice = event.point.basePrice;
+  const eventType = event.point.type.toLowerCase();
+  const city = destination.name;
+
+
+  function createOfferTemplate(offers) {
+    return offers.map((offer) =>
+      `<li class="event__offer">
+      <span class="event__offer-title">${offer.title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer.price}</span>
+      </li>`).join('');
+  }
+
   return (`<li class="trip-events__item">
   <div class="event">
-    <time class="event__date" datetime="2019-03-18">MAR 18</time>
+    <time class="event__date" datetime="2019-03-18">${editedDate}</time>
     <div class="event__type">
-      <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+      <img class="event__type-icon" width="42" height="42" src="img/icons/${eventType}.png" alt="Event type icon">
     </div>
-    <h3 class="event__title">Taxi Amsterdam</h3>
+    <h3 class="event__title">${eventType} ${city}</h3>
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+        <time class="event__start-time" datetime="2019-03-18T10:30">${editedTimeFrom}</time>
         &mdash;
-        <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+        <time class="event__end-time" datetime="2019-03-18T11:00">${editedTimeTo}</time>
       </p>
       <p class="event__duration">30M</p>
     </div>
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">20</span>
+      &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-      <li class="event__offer">
-        <span class="event__offer-title">Order Uber</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">20</span>
-      </li>
+    ${ createOfferTemplate(offerObj.offers)}
     </ul>
     <button class="event__favorite-btn event__favorite-btn--active" type="button">
       <span class="visually-hidden">Add to favorite</span>
@@ -41,8 +57,14 @@ function createTripEventsItemTemplate () {
 }
 
 export default class TripEventsItemView {
+  constructor(event, offer, destination) {
+    this.event = event;
+    this.offer = offer;
+    this.destination = destination;
+  }
+
   getTemplate () {
-    return createTripEventsItemTemplate ();
+    return createTripEventsItemTemplate (this.event, this.offer, this.destination);
   }
 
   getElement () {
