@@ -58,14 +58,25 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
 }
 
 export default class TripEventsItemView extends AbstractView {
-  constructor(event, offer, destination) {
+  constructor(event, offer, destination, onEditClick) {
     super();
     this.event = event;
     this.offer = offer;
     this.destination = destination;
+    this.handleEditClick = onEditClick;
+    // this.element.querySelector('.event__rollup-btn').addEventListener('click', alert('xyi'));
   }
+
+  // get openFormButton () {
+  //   return this.element.querySelector('.event__rollup-btn');
+  // }
 
   get template () {
     return createTripEventsItemTemplate (this.event, this.offer, this.destination);
   }
+
+  editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.handleEditClick();
+  };
 }

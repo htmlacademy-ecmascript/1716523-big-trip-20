@@ -21,3 +21,4 @@ render (new TripInfoView, siteTripInfoElement, RenderPosition.AFTERBEGIN);
 render (new TripSortView, tripEventsElement);
 
 eventsListPresenter.init();
+// eventsListPresenter.initEditItem();
