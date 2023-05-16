@@ -1,4 +1,5 @@
-import { createElement } from '../render';
+// import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 function createPhotoesContainerTemplate () {
   return (`
@@ -11,19 +12,8 @@ function createPhotoesContainerTemplate () {
 </div>`);
 }
 
-export default class PhotoesContainer {
-  getTemplate() {
+export default class PhotoesContainer extends AbstractView {
+  get template() {
     return createPhotoesContainerTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement (this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement () {
-    this.element = null;
   }
 }

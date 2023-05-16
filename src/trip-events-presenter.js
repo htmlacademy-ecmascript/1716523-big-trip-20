@@ -1,4 +1,4 @@
-import { render } from './render';
+import { render } from './framework/render';
 import TripEventsListView from './view/trip-events-list-view';
 import TripEventsEditItemView from './view/trip-events-edit-item-view.js';
 import TripEventsItemView from './view/trip-events-item-view.js';
@@ -22,13 +22,13 @@ export default class TripEventsListPresenter {
     for (let i = 0; i < this.points.length; i++) {
       if (i === 0) {
         const currentOffer = this.offers.find((offer) => offer.type === this.points[i].type);
-        render (new TripEventsEditItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]}), this.tripEventsList.getElement());
+        render (new TripEventsEditItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]}), this.tripEventsList.element);
       } else {
         const currentOffer = this.offers.find((offer) => offer.type === this.points[i].type);
-        render (new TripEventsItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]}), this.tripEventsList.getElement());
+        render (new TripEventsItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]}), this.tripEventsList.element);
       }
     }
-    render (new PhotoeTemplate(...this.destinations), this.photoesContainer.getElement());
+    render (new PhotoeTemplate(...this.destinations), this.photoesContainer.element);
   }
 
 }

@@ -1,4 +1,5 @@
-import { createElement } from '../render';
+// import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 function createOfferSelectorTemplate(title, id, price) {
 
@@ -12,25 +13,15 @@ function createOfferSelectorTemplate(title, id, price) {
   </div>`;
 }
 
-export default class OffersSelector {
+export default class OffersSelector extends AbstractView {
   constructor(title, id, price) {
+    super();
     this.title = title;
     this.id = id;
     this.prie = price;
   }
 
-  getTemplate() {
+  get template() {
     return createOfferSelectorTemplate(this.title, this.id, this.price);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement (this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement () {
-    this.element = null;
   }
 }

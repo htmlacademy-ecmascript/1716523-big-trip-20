@@ -1,4 +1,5 @@
-import { createElement } from '../render';
+// import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 
 function createPhotoeTemplate (destination) {
 
@@ -9,23 +10,13 @@ function createPhotoeTemplate (destination) {
   `);
 }
 
-export default class PhotoeTemplate {
+export default class PhotoeTemplate extends AbstractView{
   constructor(destination) {
+    super();
     this.destination = destination;
   }
 
-  getTemplate() {
+  get template() {
     return createPhotoeTemplate(this.destination);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement (this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement () {
-    this.element = null;
   }
 }

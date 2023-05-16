@@ -1,6 +1,6 @@
-import { createElement } from '../render';
+// import { createElement } from '../render';
 import { editFullDate } from '../utils';
-
+import AbstractView from '../framework/view/abstract-view';
 
 function createTripEventsEditItemTemplate (event, offerObj, destination) {
 
@@ -150,26 +150,16 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
 </li>`);
 }
 
-export default class TripEventsEditItemView {
+export default class TripEventsEditItemView extends AbstractView {
   constructor(event, offer, destination) {
+    super();
     this.event = event;
     this.offer = offer;
     this.destination = destination;
   }
 
-  getTemplate () {
+  get template () {
     return createTripEventsEditItemTemplate (this.event, this.offer, this.destination);
-  }
-
-  getElement () {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement () {
-    this.element = null;
   }
 }
 
