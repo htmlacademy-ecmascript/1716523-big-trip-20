@@ -7,7 +7,7 @@ import PhotoesContainer from './view/event-photoes-container-view';
 
 export default class TripEventsListPresenter {
   #tripEventsList = new TripEventsListView();
-  #tripEditEventItem = new TripEventsEditItemView();
+  // #tripEditEventItem = new TripEventsEditItemView();
   #photoesContainer = new PhotoesContainer();
 
   constructor({listContainer, pointsModel}) {
@@ -36,65 +36,53 @@ export default class TripEventsListPresenter {
   // }
 
   init() {
+    this.#renderPoints();
 
-    // openFormButton.addEventListener('click', console.log('pizda'));
-
-    console.log(this.points, 'fff')
-
-    render (this.#tripEventsList, this.listContainer);
-    for (let i = 0; i < this.points.length; i++) {
-      const currentOffer = this.offers.find((offer) => offer.type === this.points[i].type);
-      const editItemComponent = new TripEventsEditItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]});
-      const itemComponent = new TripEventsItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]});
-      render (itemComponent, this.#tripEventsList.element);
-      // console.log(itemComponent.openFormButton, 'zalupa')
-      // itemComponent.openFormButton.addEventListener('click', console.log('pizdec'));
-    }
-    render (new PhotoeTemplate(...this.destinations), this.#photoesContainer.element);
   }
-  // init() {
 
-  //   render (this.#tripEventsList, this.listContainer);
-  //   for (let i = 0; i < this.points.length; i++) {
-  //     const currentOffer = this.offers.find((offer) => offer.type === this.points[i].type);
-  //     const itemComponent = new TripEventsItemView(({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]}));
-  //     console.log(itemComponent, 'dddd')
-  //     const editItemComponent = new TripEventsEditItemView(({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]}));
-  //     render (itemComponent, this.#tripEventsList.element);
-  //   }
-  //   render (new PhotoeTemplate(...this.destinations), this.#photoesContainer.element);
-  // }
+  #renderPoints() {
+    render (this.#tripEventsList, this.listContainer);
+    this.points.forEach((point, i) => {
+      this.#renderPoint(this.offers, point, this.destinations[i]);
+    });
+  }
 
-  // initEditItem() {
 
-  // const escKeyDownHandler = (evt) => {
-  //   if (evt.key === 'Escape') {
-  //     evt.preventDefault();
-  //     replaceFormToCard();
-  //     document.removeEventListener('keydown', escKeyDownHandler);
-  //   }
-  // };
+  #renderPoint(offers, point, destination) {
 
-  //   const onFormSubmit = () => {
-  //     replaceFormToCard();
-  //     document.removeEventListener('keydown', escKeyDownHandler);
-  //   };
+    const currentOffer = offers.find((offer) => offer.type === point.type);
+    const itemComponent = new TripEventsItemView({point}, {...currentOffer}, destination, showFormElement);
+    const editItemComponent = new TripEventsEditItemView({point}, {...currentOffer}, {...destination}, submitFormElement, hideFormElement);
+    render (new PhotoeTemplate(destination), this.#photoesContainer.element);
+    render (itemComponent, this.#tripEventsList.element);
 
-  //   const onEditClick = () => {
-  //     replaceCardToForm();
-  //     document.addEventListener('keydown', escKeyDownHandler);
-  //   };
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToCard();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
 
-  // function replaceCardToForm() {
-  //   replace(editItemComponent, itemComponent);
-  // }
+    function showFormElement() {
+      replaceCardToForm();
+      document.addEventListener('keydown', escKeyDownHandler);
+    }
+    function submitFormElement() {
+      replaceFormToCard();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    }
+    function hideFormElement() {
+      replaceFormToCard();
+      document.removeEventListener('keydown', escKeyDownHandler);
+    }
 
-  //   function replaceFormToCard() {
-  //     replace(itemComponent, editItemComponent);
-  //   }
+    function replaceCardToForm() {
+      replace(editItemComponent, itemComponent);
+    }
 
-  //   // render (editItemComponent, this.#tripEventsList.element);
-  //   render (itemComponent, this.#tripEventsList.element);
-  // }
-
+    function replaceFormToCard() {
+      replace(itemComponent, editItemComponent);
+    }
+  }
 }
