@@ -1,4 +1,4 @@
-// import { createElement } from '../render';
+
 import AbstractView from '../framework/view/abstract-view';
 
 function createPhotoeTemplate (destination) {

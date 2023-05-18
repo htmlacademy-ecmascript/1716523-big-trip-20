@@ -1,4 +1,4 @@
-// import { createElement } from '../render';
+
 import AbstractView from '../framework/view/abstract-view';
 import { editEventsDate, editEventsTime } from '../utils';
 
