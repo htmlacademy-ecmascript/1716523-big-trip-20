@@ -4,10 +4,10 @@ import TripEventsEditItemView from './view/trip-events-edit-item-view.js';
 import TripEventsItemView from './view/trip-events-item-view.js';
 import PhotoeTemplate from './view/photo-view';
 import PhotoesContainer from './view/event-photoes-container-view';
+import NoEvents from './view/no-events-view';
 
 export default class TripEventsListPresenter {
   #tripEventsList = new TripEventsListView();
-  // #tripEditEventItem = new TripEventsEditItemView();
   #photoesContainer = new PhotoesContainer();
 
   constructor({listContainer, pointsModel}) {
@@ -18,22 +18,6 @@ export default class TripEventsListPresenter {
     this.points = [...this.pointsModel.points];
   }
 
-  // init() {
-
-  //   render (this.#tripEventsList, this.listContainer);
-  //   for (let i = 0; i < this.points.length; i++) {
-  //     if (i === 0) {
-  //       const currentOffer = this.offers.find((offer) => offer.type === this.points[i].type);
-  //       const editItemComponent = new TripEventsEditItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]});
-  //       render (editItemComponent, this.#tripEventsList.element);
-  //     } else {
-  //       const currentOffer = this.offers.find((offer) => offer.type === this.points[i].type);
-  //       const itemComponent = new TripEventsItemView({point: this.points[i]}, {...currentOffer}, {...this.destinations[i]});
-  //       render (itemComponent, this.#tripEventsList.element);
-  //     }
-  //   }
-  //   render (new PhotoeTemplate(...this.destinations), this.#photoesContainer.element);
-  // }
 
   init() {
     this.#renderPoints();
@@ -41,10 +25,15 @@ export default class TripEventsListPresenter {
   }
 
   #renderPoints() {
-    render (this.#tripEventsList, this.listContainer);
-    this.points.forEach((point, i) => {
-      this.#renderPoint(this.offers, point, this.destinations[i]);
-    });
+    if (!this.points) {
+      const noEventsComponent = new NoEvents;
+      render (noEventsComponent, this.listContainer);
+    } else {
+      render (this.#tripEventsList, this.listContainer);
+      this.points.forEach((point, i) => {
+        this.#renderPoint(this.offers, point, this.destinations[i]);
+      });
+    }
   }
 
 
