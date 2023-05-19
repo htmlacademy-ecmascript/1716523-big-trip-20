@@ -1,4 +1,5 @@
-import { createElement } from '../render';
+
+import AbstractView from '../framework/view/abstract-view';
 
 function createHeaderFormTemplate () {
   return (
@@ -28,19 +29,9 @@ function createHeaderFormTemplate () {
   );
 }
 
-export default class HeaderFiltersView {
-  getTemplate () {
+export default class HeaderFiltersView extends AbstractView {
+
+  get template () {
     return createHeaderFormTemplate ();
-  }
-
-  getElement () {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement () {
-    this.element = null;
   }
 }

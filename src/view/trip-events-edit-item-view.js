@@ -1,6 +1,6 @@
-import { createElement } from '../render';
-import { editFullDate } from '../utils';
 
+import { editFullDate } from '../utils';
+import AbstractView from '../framework/view/abstract-view';
 
 function createTripEventsEditItemTemplate (event, offerObj, destination) {
 
@@ -150,27 +150,48 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
 </li>`);
 }
 
-export default class TripEventsEditItemView {
-  constructor(event, offer, destination) {
+export default class TripEventsEditItemView extends AbstractView {
+
+  handleFormSubmit = null;
+
+  constructor(event, offer, destination, onFormSubmit, onFormClose, onFormReset, onAddNewEvent) {
+    super();
     this.event = event;
     this.offer = offer;
     this.destination = destination;
+    this.handleFormSubmit = onFormSubmit;
+    this.handleFormReset = onFormReset;
+    this.handleFormClose = onFormClose;
+    this.element.querySelector('.event__save-btn').addEventListener('submit', this.submitFormHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.closeFormHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('reset', this.resetFormHandler);
+    this.handleAddNewEvent = onAddNewEvent;
+    document.querySelector('.trip-main__event-add-btn').addEventListener('click', this.addNewEventHandler);
   }
 
-  getTemplate () {
+  get template () {
     return createTripEventsEditItemTemplate (this.event, this.offer, this.destination);
   }
 
-  getElement () {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
+  submitFormHandler = (evt) => {
+    evt.preventDefault();
+    this.handleFormSubmit(this.element);
+  };
 
-  removeElement () {
-    this.element = null;
-  }
+  closeFormHandler = (evt) => {
+    evt.preventDefault();
+    this.handleFormClose(this.element);
+  };
+
+  resetFormHandler = (evt) => {
+    evt.preventDefault();
+    this.handleFormReset(this.element);
+  };
+
+  addNewEventHandler = () => {
+    this.handleAddNewEvent(this.element);
+  };
+
 }
 
 export {createTripEventsEditItemTemplate};

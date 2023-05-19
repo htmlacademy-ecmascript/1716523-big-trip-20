@@ -1,4 +1,5 @@
-import { createElement } from '../render';
+
+import AbstractView from '../framework/view/abstract-view';
 import { editEventsDate, editEventsTime } from '../utils';
 
 function createTripEventsItemTemplate (event, offerObj, destination) {
@@ -56,25 +57,25 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
 </li>`);
 }
 
-export default class TripEventsItemView {
-  constructor(event, offer, destination) {
+export default class TripEventsItemView extends AbstractView {
+
+  handleEditClick = null;
+
+  constructor(event, offer, destination, onEditClick) {
+    super();
     this.event = event;
     this.offer = offer;
     this.destination = destination;
+    this.handleEditClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.editClickHandler);
   }
 
-  getTemplate () {
+  get template () {
     return createTripEventsItemTemplate (this.event, this.offer, this.destination);
   }
 
-  getElement () {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement () {
-    this.element = null;
-  }
+  editClickHandler = (evt) => {
+    evt.preventDefault();
+    this.handleEditClick(this.element);
+  };
 }
