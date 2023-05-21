@@ -5,7 +5,6 @@ import TripEventsItemView from './view/trip-events-item-view.js';
 import PhotoeTemplate from './view/photo-view';
 import PhotoesContainer from './view/event-photoes-container-view';
 import NoEvents from './view/no-events-view';
-import HeaderFiltersView from './view/header-form-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import TripSortView from './view/trip-sort-view.js';
 import FormWithoutDestination from './view/event-without-destination-view';
@@ -15,10 +14,11 @@ const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
-const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
+
+const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
 
 export default class TripEventsListPresenter {
-  #tripEventsList = new TripEventsListView();
+  tripEventsList = new TripEventsListView();
   #photoesContainer = new PhotoesContainer();
 
   constructor({listContainer, pointsModel}) {
@@ -34,10 +34,14 @@ export default class TripEventsListPresenter {
 
     render (new TripInfoView, siteTripInfoElement, RenderPosition.AFTERBEGIN);
     render (new TripSortView, tripEventsElement);
-    render (new HeaderFiltersView, siteFiltersElement);
 
     this.#renderPoints();
 
+    const addNewEvent = () => {
+      render(new FormWithoutDestination(), this.tripEventsList.element, RenderPosition.AFTERBEGIN);
+    };
+
+    addNewEventButton.addEventListener('click', addNewEvent);
   }
 
   #renderPoints() {
@@ -45,7 +49,7 @@ export default class TripEventsListPresenter {
       const noEventsComponent = new NoEvents;
       render (noEventsComponent, this.listContainer);
     } else {
-      render (this.#tripEventsList, this.listContainer);
+      render (this.tripEventsList, this.listContainer);
       this.points.forEach((point, i) => {
         this.#renderPoint(this.offers, point, this.destinations[i]);
       });
@@ -58,9 +62,9 @@ export default class TripEventsListPresenter {
     const currentOffer = offers.find((offer) => offer.type === point.type);
     const itemComponent = new TripEventsItemView({point}, {...currentOffer}, destination, showFormElement);
     const editItemComponent = new TripEventsEditItemView({point}, {...currentOffer}, {...destination},
-      submitFormElement, hideFormElement, resetForm, addNewEvent);
+      submitFormElement, hideFormElement, resetForm);
     render (new PhotoeTemplate(destination), this.#photoesContainer.element);
-    render (itemComponent, this.#tripEventsList.element);
+    render (itemComponent, this.tripEventsList.element);
 
 
     const escKeyDownHandler = (evt) => {
@@ -70,10 +74,6 @@ export default class TripEventsListPresenter {
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
-
-    function addNewEvent() {
-      render(new FormWithoutDestination(), this.listContainer);
-    }
 
     function showFormElement() {
       replaceCardToForm();

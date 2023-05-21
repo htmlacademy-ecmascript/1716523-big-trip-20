@@ -51,5 +51,31 @@ function createUniqId (min, max) {
   };
 }
 
+const filterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past'
+};
 
-export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate, createUniqIdAcc};
+const filter = {
+  [filterType.EVERYTHING]: (points) => [...points],
+  [filterType.FUTURE]:(points) => points.filter((point) => isPointFuture(point)),
+  [filterType.PRESENT]:(points) => points.filter((point) => isPointPresent(point)),
+  [filterType.PAST]:(points) => points.filter((point) => isPointPast(point)),
+};
+
+function isPointFuture(point) {
+  return dayjs().isBefore(point.dateFrom);
+}
+
+function isPointPresent(point) {
+  return dayjs().isAfter(point.dateFrom) && dayjs().isBefore(point.dateTo);
+}
+
+function isPointPast(point) {
+  return dayjs().isAfter(point.dateTo);
+}
+
+
+export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate, createUniqIdAcc, filter};
