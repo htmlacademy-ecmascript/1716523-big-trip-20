@@ -5,19 +5,15 @@ import TripEventsItemView from './view/trip-events-item-view.js';
 import PhotoeTemplate from './view/photo-view';
 import PhotoesContainer from './view/event-photoes-container-view';
 import NoEvents from './view/no-events-view';
-// import HeaderFiltersView from './view/header-form-view.js';
 import TripInfoView from './view/trip-info-view.js';
 import TripSortView from './view/trip-sort-view.js';
 import FormWithoutDestination from './view/event-without-destination-view';
-
-// import FilterPresenter from './filter-presenter';
 
 
 const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
-// const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 
 const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
 
@@ -38,7 +34,6 @@ export default class TripEventsListPresenter {
 
     render (new TripInfoView, siteTripInfoElement, RenderPosition.AFTERBEGIN);
     render (new TripSortView, tripEventsElement);
-    // render (new HeaderFiltersView, siteFiltersElement);
 
     this.#renderPoints();
 

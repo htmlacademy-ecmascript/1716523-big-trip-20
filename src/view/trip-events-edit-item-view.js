@@ -165,8 +165,6 @@ export default class TripEventsEditItemView extends AbstractView {
     this.element.querySelector('.event__save-btn').addEventListener('submit', this.submitFormHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.closeFormHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('reset', this.resetFormHandler);
-    // this.handleAddNewEvent = onAddNewEvent;
-    // document.querySelector('.trip-main__event-add-btn').addEventListener('click', this.addNewEventHandler);
   }
 
   get template () {
@@ -187,10 +185,6 @@ export default class TripEventsEditItemView extends AbstractView {
     evt.preventDefault();
     this.handleFormReset(this.element);
   };
-
-  // addNewEventHandler = () => {
-  //   this.handleAddNewEvent(this.element);
-  // };
 
 }
 
