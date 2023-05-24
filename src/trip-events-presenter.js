@@ -8,6 +8,7 @@ import NoEvents from './view/no-events-view';
 import TripInfoView from './view/trip-info-view.js';
 import TripSortView from './view/trip-sort-view.js';
 import FormWithoutDestination from './view/event-without-destination-view';
+import EventPointPresenter from './points-presenter';
 
 
 const siteMainElement = document.querySelector('.page-main');
@@ -42,6 +43,7 @@ export default class TripEventsListPresenter {
     };
 
     addNewEventButton.addEventListener('click', addNewEvent);
+
   }
 
   #renderPoints() {
@@ -51,7 +53,9 @@ export default class TripEventsListPresenter {
     } else {
       render (this.tripEventsList, this.listContainer);
       this.points.forEach((point, i) => {
-        this.#renderPoint(this.offers, point, this.destinations[i]);
+        // this.#renderPoint(this.offers, point, this.destinations[i]);
+        const eventPresenter = new EventPointPresenter(this.tripEventsList.element, this.offers, point, this.destinations[i], this.#photoesContainer);
+        eventPresenter.init(point);
       });
     }
   }

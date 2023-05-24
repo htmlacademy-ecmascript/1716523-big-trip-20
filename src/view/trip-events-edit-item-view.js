@@ -4,12 +4,12 @@ import AbstractView from '../framework/view/abstract-view';
 
 function createTripEventsEditItemTemplate (event, offerObj, destination) {
 
-  const dateFrom = event.point.dateFrom;
-  const dateTo = event.point.dateTo;
+  const dateFrom = event.dateFrom;
+  const dateTo = event.dateTo;
   const editedFullDateFrom = editFullDate(dateFrom);
   const editedFullDateTo = editFullDate(dateTo);
-  const basePrice = event.point.basePrice;
-  const eventType = event.point.type;
+  const basePrice = event.basePrice;
+  const eventType = event.type;
   const city = destination.name;
 
 
@@ -20,9 +20,9 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
   function createOfferTemplate(offers) {
     return offers.map((offer) =>
       `<div class="event__offer-selector">
-         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${eventType}-${event.point.id}" type="checkbox"
+         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${eventType}-${event.id}" type="checkbox"
          name="event-offer-${eventType}"
-         ${event.point.offers.includes(offerObj.offers[0].id) ? 'checked' : ''}>
+         ${event.offers.includes(offerObj.offers[0].id) ? 'checked' : ''}>
          <label class="event__offer-label" for="event-offer-${eventType}-${event.id}">
            <span class="event__offer-title">${offer.title}</span>
            &plus;&euro;&nbsp;

@@ -8,7 +8,7 @@ function getRandomNumber() {
   return Math.floor(Math.random() * 100);
 }
 
-const DATE_FORMAT = 'MMMM DD';
+const DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'hh:mm';
 
 const FULL_DATE_FORMAT = 'DD/MM/YY hh:mm';

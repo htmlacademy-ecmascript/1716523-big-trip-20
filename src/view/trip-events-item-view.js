@@ -3,14 +3,15 @@ import AbstractView from '../framework/view/abstract-view';
 import { editEventsDate, editEventsTime } from '../utils';
 
 function createTripEventsItemTemplate (event, offerObj, destination) {
-  const dateFrom = event.point.dateFrom;
-  const dateTo = event.point.dateTo;
+  const dateFrom = event.dateFrom;
+  const dateTo = event.dateTo;
   const editedDate = editEventsDate(dateFrom);
   const editedTimeFrom = editEventsTime(dateFrom);
   const editedTimeTo = editEventsTime(dateTo);
-  const basePrice = event.point.basePrice;
-  const eventType = event.point.type.toLowerCase();
+  const basePrice = event.basePrice;
+  const eventType = event.type.toLowerCase();
   const city = destination.name;
+  const isFavorite = event.isFavorite;
 
 
   function createOfferTemplate(offers) {
@@ -44,7 +45,7 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
     <ul class="event__selected-offers">
     ${ createOfferTemplate(offerObj.offers)}
     </ul>
-    <button class="event__favorite-btn event__favorite-btn--active" type="button">
+    <button class="event__favorite-btn" type="button">
       <span class="visually-hidden">Add to favorite</span>
       <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
         <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -60,14 +61,18 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
 export default class TripEventsItemView extends AbstractView {
 
   handleEditClick = null;
+  favoriteButton = null;
 
-  constructor(event, offer, destination, onEditClick) {
+  constructor(event, offer, destination, onEditClick, onFavoriteToggle) {
     super();
     this.event = event;
     this.offer = offer;
     this.destination = destination;
     this.handleEditClick = onEditClick;
+    this.handleToggleFavorite = onFavoriteToggle;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.editClickHandler);
+    this.favoriteButton = this.element.querySelector('.event__favorite-btn');
+    this.favoriteButton.addEventListener('click',this.toggleFavoriteHandler);
   }
 
   get template () {
@@ -77,5 +82,15 @@ export default class TripEventsItemView extends AbstractView {
   editClickHandler = (evt) => {
     evt.preventDefault();
     this.handleEditClick(this.element);
+  };
+
+  toggleFavoriteHandler = (evt) => {
+    evt.preventDefault();
+    this.handleToggleFavorite(this.element);
+    if (this.favoriteButton.classList.contains('event__favorite-btn--active')) {
+      this.favoriteButton.classList.remove('event__favorite-btn--active');
+    } else {
+      this.favoriteButton.classList.add('event__favorite-btn--active');
+    }
   };
 }
