@@ -45,7 +45,7 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
     <ul class="event__selected-offers">
     ${ createOfferTemplate(offerObj.offers)}
     </ul>
-    <button class="event__favorite-btn" type="button">
+    <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
       <span class="visually-hidden">Add to favorite</span>
       <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
         <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -86,11 +86,12 @@ export default class TripEventsItemView extends AbstractView {
 
   toggleFavoriteHandler = (evt) => {
     evt.preventDefault();
+    console.log(this.element, 'ggg')
     this.handleToggleFavorite(this.element);
-    if (this.favoriteButton.classList.contains('event__favorite-btn--active')) {
-      this.favoriteButton.classList.remove('event__favorite-btn--active');
-    } else {
-      this.favoriteButton.classList.add('event__favorite-btn--active');
-    }
+    // if (this.favoriteButton.classList.contains('event__favorite-btn--active')) {
+    //   this.favoriteButton.classList.remove('event__favorite-btn--active');
+    // } else {
+    //   this.favoriteButton.classList.add('event__favorite-btn--active');
+    // }
   };
 }

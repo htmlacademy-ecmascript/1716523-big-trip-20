@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { SortType } from './const';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -77,5 +78,21 @@ function isPointPast(point) {
   return dayjs().isAfter(point.dateTo);
 }
 
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
 
-export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate, createUniqIdAcc, filter};
+const eventsSort = {
+  [SortType.DAY]: (points) => points.slice(0).sort((dateA, dateB) => dateA - dateB),
+  [SortType.PRICE]: (points) => points.slice(0).sort((priceA, priceB) => priceA - priceB),
+  [SortType.TIME]: (points) => points.slice(0).sort(),
+  [SortType.EVENT]: () => {
+    throw new Error('sort is not implemented');
+  } ,
+  [SortType.OFFERS]: () => {
+    throw new Error('sort is not implemented');
+  },
+};
+
+
+export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate, createUniqIdAcc, filter, updateItem, eventsSort};

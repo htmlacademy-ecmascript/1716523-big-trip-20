@@ -3,6 +3,11 @@ import TripEventsEditItemView from './view/trip-events-edit-item-view.js';
 import TripEventsItemView from './view/trip-events-item-view.js';
 import PhotoeTemplate from './view/photo-view';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 
 export default class EventPointPresenter {
   // #pointListContainer = null;
@@ -11,13 +16,17 @@ export default class EventPointPresenter {
   // #point = null;
   // #offers = null;
   // #destination = null;
+  #handleModeChange = null;
+  #mode = Mode.DEFAULT;
 
-  constructor(pointListContainer, offers, point, destination, photoesContainer) {
+  constructor(pointListContainer, offers, point, destination, photoesContainer, onDataChange, onModeChange) {
     this.pointListContainer = pointListContainer;
     this.point = point;
     this.offers = offers;
     this.destination = destination;
     this.photoesContainer = photoesContainer;
+    this.handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
 
     // this.currentOffer = this.offers.find((offer) => offer.type === this.point.type);
     // this.itemComponent = new TripEventsItemView({point}, {...this.currentOffer}, this.destination, this.#showFormElement);
@@ -54,16 +63,22 @@ export default class EventPointPresenter {
 
   #replaceCardToForm() {
     replace(this.editItemComponent, this.itemComponent);
+    console.log(this.#handleModeChange, 'fff')
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceFormToCard() {
     replace(this.itemComponent, this.editItemComponent);
+    this.#mode = Mode.DEFAULT;
   }
 
   #favoriteToggle = (element) => {
-    console.log(this.point, 'sss');
-    console.log(element, 'jjjj');
-    this.point = {...this.point, isFavorite: !this.point.isFavorite};
+    // console.log(this.point, 'sss');
+    // console.log(element, 'jjjj');
+    // this.point = {...this.point, isFavorite: !this.point.isFavorite};
+
+    this.handleDataChange({...this.point, isFavorite: !this.point.isFavorite});
     // render(this.itemComponent, this.pointListContainer);
   };
 
@@ -82,11 +97,19 @@ export default class EventPointPresenter {
       return;
     }
 
-    if (this.pointListContainer.contains(prevItemComponent.element)) {
+    // if (this.pointListContainer.contains(prevItemComponent.element)) {
+    //   replace(this.itemComponent, prevItemComponent);
+    // }
+
+    // if (this.pointListContainer.contains(prevEditItemComponent.element)) {
+    //   replace(this.editItemComponent, prevEditItemComponent);
+    // }
+
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.itemComponent, prevItemComponent);
     }
 
-    if (this.pointListContainer.contains(prevEditItemComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.editItemComponent, prevEditItemComponent);
     }
 
@@ -100,5 +123,11 @@ export default class EventPointPresenter {
   destroy() {
     remove(this.itemComponent);
     remove(this.editItemComponent);
+  }
+
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToCard();
+    }
   }
 }

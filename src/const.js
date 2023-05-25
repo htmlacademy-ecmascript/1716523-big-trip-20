@@ -15,4 +15,12 @@ const DESCRIPTIONS = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
   'Nunc fermentum tortor ac porta dapibus.',
   'In rutrum ac purus sit amet tempus.'];
 
-export {POINT_TYPES, CITTES, DESCRIPTIONS};
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS: 'offers',
+};
+
+export {POINT_TYPES, CITTES, DESCRIPTIONS, SortType};
