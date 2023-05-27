@@ -18,6 +18,7 @@ function getSortItem(sortItem) {
   visually-hidden" type="radio"
   name="trip-sort"
   value="sort-${sortItem.type}"
+  data-sort-type="${sortItem.type}"
   ${(sortItem.isChecked) ? 'checked' : ''}
   ${(sortItem.isDisabled) ? 'disabled' : ''}
   >
@@ -27,7 +28,6 @@ function getSortItem(sortItem) {
 }
 
 function createSortTemplate({sortMap}) {
-  console.log(sortMap, 'bbb');
   return `
   <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
   ${sortMap.map((sortItem) => getSortItem(sortItem)).join('')}
@@ -82,13 +82,13 @@ export default class TripSortView extends AbstractView {
   }
 
   get template() {
-    // return createTripSortTemplate();
-    console.log({sortMap: this.#sortMap}, 'xxx');
     return createSortTemplate({sortMap: this.#sortMap});
   }
 
   #sortTypeChangeHandler = (evt) => {
     evt.preventDefault();
+    console.log(evt.target, 'fff')
     this.#onSortTypeChange(evt.target.dataset.sortType);
+
   };
 }

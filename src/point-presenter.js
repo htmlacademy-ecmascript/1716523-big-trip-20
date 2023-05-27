@@ -63,7 +63,6 @@ export default class EventPointPresenter {
 
   #replaceCardToForm() {
     replace(this.editItemComponent, this.itemComponent);
-    console.log(this.#handleModeChange, 'fff')
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
@@ -73,13 +72,13 @@ export default class EventPointPresenter {
     this.#mode = Mode.DEFAULT;
   }
 
-  #favoriteToggle = (element) => {
+  #favoriteToggle = () => {
     // console.log(this.point, 'sss');
     // console.log(element, 'jjjj');
     // this.point = {...this.point, isFavorite: !this.point.isFavorite};
-
-    this.handleDataChange({...this.point, isFavorite: !this.point.isFavorite});
-    // render(this.itemComponent, this.pointListContainer);
+    // this.point.isFavorite = !this.point.isFavorite;
+    this.handleDataChange({...this.point, isFavorite:!this.point.isFavorite});
+    console.log('favoriteToggle', this.point);
   };
 
   init(point) {
@@ -126,7 +125,8 @@ export default class EventPointPresenter {
   }
 
   resetView() {
-    if (this.#mode !== Mode.DEFAULT) {
+    if (this.#mode === Mode.EDITING) {
+      console.log(this.#mode, 'resetView');
       this.#replaceFormToCard();
     }
   }
