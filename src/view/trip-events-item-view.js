@@ -1,6 +1,7 @@
 
 import AbstractView from '../framework/view/abstract-view';
 import { editEventsDate, editEventsTime } from '../utils';
+import dayjs from 'dayjs';
 
 function createTripEventsItemTemplate (event, offerObj, destination) {
   const dateFrom = event.dateFrom;
@@ -86,12 +87,6 @@ export default class TripEventsItemView extends AbstractView {
 
   toggleFavoriteHandler = (evt) => {
     evt.preventDefault();
-    console.log(this.element, 'ggg')
     this.handleToggleFavorite(this.element);
-    // if (this.favoriteButton.classList.contains('event__favorite-btn--active')) {
-    //   this.favoriteButton.classList.remove('event__favorite-btn--active');
-    // } else {
-    //   this.favoriteButton.classList.add('event__favorite-btn--active');
-    // }
   };
 }

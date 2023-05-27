@@ -10,12 +10,9 @@ const Mode = {
 
 
 export default class EventPointPresenter {
-  // #pointListContainer = null;
   itemComponent = null;
   editItemComponent = null;
-  // #point = null;
-  // #offers = null;
-  // #destination = null;
+  handleDataChange = null;
   #handleModeChange = null;
   #mode = Mode.DEFAULT;
 
@@ -27,11 +24,6 @@ export default class EventPointPresenter {
     this.photoesContainer = photoesContainer;
     this.handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
-
-    // this.currentOffer = this.offers.find((offer) => offer.type === this.point.type);
-    // this.itemComponent = new TripEventsItemView({point}, {...this.currentOffer}, this.destination, this.#showFormElement);
-    // this.editItemComponent = new TripEventsEditItemView({point}, {...this.currentOffer}, {...this.destination},
-    //   this.#submitFormElement, this.#hideFormElement, this.#resetForm);
   }
 
   #escKeyDownHandler = (evt) => {
@@ -73,12 +65,9 @@ export default class EventPointPresenter {
   }
 
   #favoriteToggle = () => {
-    // console.log(this.point, 'sss');
-    // console.log(element, 'jjjj');
-    // this.point = {...this.point, isFavorite: !this.point.isFavorite};
     // this.point.isFavorite = !this.point.isFavorite;
-    this.handleDataChange({...this.point, isFavorite:!this.point.isFavorite});
-    console.log('favoriteToggle', this.point);
+    this.point = {...this.point, isFavorite:!this.point.isFavorite};
+    this.handleDataChange(this.point);
   };
 
   init(point) {
@@ -96,14 +85,6 @@ export default class EventPointPresenter {
       return;
     }
 
-    // if (this.pointListContainer.contains(prevItemComponent.element)) {
-    //   replace(this.itemComponent, prevItemComponent);
-    // }
-
-    // if (this.pointListContainer.contains(prevEditItemComponent.element)) {
-    //   replace(this.editItemComponent, prevEditItemComponent);
-    // }
-
     if (this.#mode === Mode.DEFAULT) {
       replace(this.itemComponent, prevItemComponent);
     }
@@ -116,7 +97,6 @@ export default class EventPointPresenter {
     remove(prevEditItemComponent);
 
     render (new PhotoeTemplate(this.destination), this.photoesContainer.element);
-    // render (this.itemComponent, this.pointListContainer);
   }
 
   destroy() {
@@ -126,7 +106,6 @@ export default class EventPointPresenter {
 
   resetView() {
     if (this.#mode === Mode.EDITING) {
-      console.log(this.#mode, 'resetView');
       this.#replaceFormToCard();
     }
   }

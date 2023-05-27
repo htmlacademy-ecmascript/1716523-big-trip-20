@@ -83,9 +83,9 @@ function updateItem(items, update) {
 }
 
 const eventsSort = {
-  [SortType.DAY]: (points) => points.slice(0).sort((a, b) => a.dateFrom - b.dateFrom),
+  [SortType.DAY]: (points) => points.slice(0).sort((a, b) => dayjs(a.dateFrom).toDate() - dayjs(b.dateFrom).toDate()),
   [SortType.PRICE]: (points) => points.slice(0).sort((a, b) => a.basePrice - b.basePrice),
-  [SortType.TIME]: (points) => points.slice(0).sort((a, b) => a.dateTo - b.dateTo),
+  [SortType.TIME]: (points) => points.slice(0).sort((a, b) => (dayjs(a.dateFrom).diff(dayjs(a.dateTo), 'month')) - (dayjs(b.dateFrom).diff(dayjs(b.dateTo), 'month'))),
   [SortType.EVENT]: () => {
     throw new Error('sort is not implemented');
   } ,

@@ -79,7 +79,7 @@ export default class TripEventsListPresenter {
 
 
   #sortPoints = (sortType) => {
-    console.log('sortPoints', eventsSort, this.#currentSortType)
+    // console.log('sortPoints', eventsSort, this.#currentSortType)
     this.#currentSortType = sortType;
     this.points = eventsSort[this.#currentSortType](this.points);
   };
@@ -97,7 +97,7 @@ export default class TripEventsListPresenter {
       render (noEventsComponent, this.listContainer);
     } else {
       render (this.tripEventsList, this.listContainer);
-      console.log(this.points, 'fff')
+      // console.log(this.points, 'fff')
       this.points.forEach((point, i) => {
         // this.#renderPoint(this.offers, point, this.destinations[i]);
         const eventPresenter = new EventPointPresenter(this.tripEventsList.element, this.offers, point, this.destinations[i],
@@ -116,6 +116,7 @@ export default class TripEventsListPresenter {
   #handlePointChange = (updatedPoint) => {
     this.points = updateItem(this.points, updatedPoint);
     this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
+    console.log(updatedPoint.isFavorite, 'dddd')
   };
 
   #handleModeChange = () => {
