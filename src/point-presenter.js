@@ -65,7 +65,6 @@ export default class EventPointPresenter {
   }
 
   #favoriteToggle = () => {
-    // this.point.isFavorite = !this.point.isFavorite;
     this.point = {...this.point, isFavorite:!this.point.isFavorite};
     this.handleDataChange(this.point);
   };

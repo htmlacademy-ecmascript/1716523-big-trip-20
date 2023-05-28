@@ -10,8 +10,6 @@ import { eventsSort, updateItem } from './utils';
 import { SortType } from './const';
 
 
-// const siteMainElement = document.querySelector('.page-main');
-// const tripEventsElement = siteMainElement.querySelector('.trip-events');
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
 

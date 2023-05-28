@@ -1,7 +1,6 @@
 
 import AbstractView from '../framework/view/abstract-view';
 import { editEventsDate, editEventsTime } from '../utils';
-import dayjs from 'dayjs';
 
 function createTripEventsItemTemplate (event, offerObj, destination) {
   const dateFrom = event.dateFrom;
