@@ -1,8 +1,5 @@
 import { render, RenderPosition, replace, remove } from './framework/render';
 import TripEventsListView from './view/trip-events-list-view';
-// import TripEventsEditItemView from './view/trip-events-edit-item-view.js';
-// import TripEventsItemView from './view/trip-events-item-view.js';
-// import PhotoeTemplate from './view/photo-view';
 import PhotoesContainer from './view/event-photoes-container-view';
 import NoEvents from './view/no-events-view';
 import TripInfoView from './view/trip-info-view.js';
@@ -13,8 +10,8 @@ import { eventsSort, updateItem } from './utils';
 import { SortType } from './const';
 
 
-const siteMainElement = document.querySelector('.page-main');
-const tripEventsElement = siteMainElement.querySelector('.trip-events');
+// const siteMainElement = document.querySelector('.page-main');
+// const tripEventsElement = siteMainElement.querySelector('.trip-events');
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
 
@@ -43,10 +40,6 @@ export default class TripEventsListPresenter {
     this.#defaultEventPoints = [...this.pointsModel.points];
 
     render (new TripInfoView, siteTripInfoElement, RenderPosition.AFTERBEGIN);
-    // render (new TripSortView({
-    //   sortType: this.#currentSortType,
-    //   onSortTypeChange: this.#sortTypeChangeHandler,
-    // }), tripEventsElement);
 
     this.#renderPoints();
     this.#sortPoints(this.#currentSortType);
@@ -79,7 +72,6 @@ export default class TripEventsListPresenter {
 
 
   #sortPoints = (sortType) => {
-    // console.log('sortPoints', eventsSort, this.#currentSortType)
     this.#currentSortType = sortType;
     this.points = eventsSort[this.#currentSortType](this.points);
   };
@@ -97,9 +89,7 @@ export default class TripEventsListPresenter {
       render (noEventsComponent, this.listContainer);
     } else {
       render (this.tripEventsList, this.listContainer);
-      // console.log(this.points, 'fff')
       this.points.forEach((point, i) => {
-        // this.#renderPoint(this.offers, point, this.destinations[i]);
         const eventPresenter = new EventPointPresenter(this.tripEventsList.element, this.offers, point, this.destinations[i],
           this.#photoesContainer, this.#handlePointChange, this.#handleModeChange);
         eventPresenter.init(point);
@@ -116,7 +106,6 @@ export default class TripEventsListPresenter {
   #handlePointChange = (updatedPoint) => {
     this.points = updateItem(this.points, updatedPoint);
     this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
-    console.log(updatedPoint.isFavorite, 'dddd')
   };
 
   #handleModeChange = () => {
@@ -124,49 +113,4 @@ export default class TripEventsListPresenter {
       presenter.resetView();
     });
   };
-
-
-  // #renderPoint(offers, point, destination) {
-
-  //   const currentOffer = offers.find((offer) => offer.type === point.type);
-  //   const itemComponent = new TripEventsItemView({point}, {...currentOffer}, destination, showFormElement);
-  //   const editItemComponent = new TripEventsEditItemView({point}, {...currentOffer}, {...destination},
-  //     submitFormElement, hideFormElement, resetForm);
-  //   render (new PhotoeTemplate(destination), this.#photoesContainer.element);
-  //   render (itemComponent, this.tripEventsList.element);
-
-
-  //   const escKeyDownHandler = (evt) => {
-  //     if (evt.key === 'Escape') {
-  //       evt.preventDefault();
-  //       replaceFormToCard();
-  //       document.removeEventListener('keydown', escKeyDownHandler);
-  //     }
-  //   };
-
-  //   function showFormElement() {
-  //     replaceCardToForm();
-  //     document.addEventListener('keydown', escKeyDownHandler);
-  //   }
-  //   function submitFormElement() {
-  //     replaceFormToCard();
-  //     document.removeEventListener('keydown', escKeyDownHandler);
-  //   }
-  //   function hideFormElement() {
-  //     replaceFormToCard();
-  //     document.removeEventListener('keydown', escKeyDownHandler);
-  //   }
-
-  //   function resetForm() {
-  //     document.querySelector('form').reset();
-  //   }
-
-  //   function replaceCardToForm() {
-  //     replace(editItemComponent, itemComponent);
-  //   }
-
-  //   function replaceFormToCard() {
-  //     replace(itemComponent, editItemComponent);
-  //   }
-  // }
 }
