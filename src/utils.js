@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { SortType } from './const';
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
@@ -8,7 +9,7 @@ function getRandomNumber() {
   return Math.floor(Math.random() * 100);
 }
 
-const DATE_FORMAT = 'MMMM DD';
+const DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'hh:mm';
 
 const FULL_DATE_FORMAT = 'DD/MM/YY hh:mm';
@@ -77,5 +78,21 @@ function isPointPast(point) {
   return dayjs().isAfter(point.dateTo);
 }
 
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
 
-export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate, createUniqIdAcc, filter};
+const eventsSort = {
+  [SortType.DAY]: (points) => points.slice(0).sort((a, b) => dayjs(a.dateFrom).toDate() - dayjs(b.dateFrom).toDate()),
+  [SortType.PRICE]: (points) => points.slice(0).sort((a, b) => a.basePrice - b.basePrice),
+  [SortType.TIME]: (points) => points.slice(0).sort((a, b) => (dayjs(a.dateFrom).diff(dayjs(a.dateTo), 'month')) - (dayjs(b.dateFrom).diff(dayjs(b.dateTo), 'month'))),
+  [SortType.EVENT]: () => {
+    throw new Error('sort is not implemented');
+  } ,
+  [SortType.OFFERS]: () => {
+    throw new Error('sort is not implemented');
+  },
+};
+
+
+export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate, createUniqIdAcc, filter, updateItem, eventsSort};
