@@ -9,12 +9,10 @@ import EventPointPresenter from './point-presenter';
 import { eventsSort, updateItem } from './utils';
 import { SortType } from './const';
 
-
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
 
 const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
-
 export default class TripEventsListPresenter {
   tripEventsList = new TripEventsListView();
   points = [];
