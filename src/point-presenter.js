@@ -76,8 +76,14 @@ export default class EventPointPresenter {
 
     this.currentOffer = this.offers.find((offer) => offer.type === this.point.type);
     this.itemComponent = new TripEventsItemView(point, {...this.currentOffer}, this.destination, this.#showFormElement, this.#favoriteToggle);
-    this.editItemComponent = new TripEventsEditItemView(point, {...this.currentOffer}, {...this.destination},
-      this.#submitFormElement, this.#hideFormElement, this.#resetForm);
+    // this.editItemComponent = new TripEventsEditItemView(point, {...this.currentOffer}, {...this.destination},
+    //   this.#submitFormElement, this.#hideFormElement, this.#resetForm);
+    this.editItemComponent = new TripEventsEditItemView({
+      point,
+      offer: this.currentOffer,
+      destination: this.destination
+    },
+    this.#submitFormElement, this.#hideFormElement, this.#resetForm);
 
     if (prevItemComponent === null || prevEditItemComponent === null) {
       render(this.itemComponent, this.pointListContainer);

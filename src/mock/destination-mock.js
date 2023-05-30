@@ -3,7 +3,7 @@ import { getRandomArrayElement, getRandomInteger, createUniqId } from '../utils'
 
 function createPicturesArr (id, cityName, cityDescription) {
   return {
-    'src': `https://loremflickr.com/248/152?${id}`,
+    'src': `https://loremflickr.com/248/152/${id}`,
     'description': `${cityName} ${cityDescription}`,
   };
 }

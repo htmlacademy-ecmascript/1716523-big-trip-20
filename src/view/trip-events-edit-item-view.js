@@ -1,15 +1,15 @@
 
 import { editFullDate } from '../utils';
-import AbstractView from '../framework/view/abstract-view';
+// import AbstractView from '../framework/view/abstract-view';
+import AbstractStateFulView from '../framework/view/abstract-stateful-view';
 
-function createTripEventsEditItemTemplate (event, offerObj, destination) {
-
-  const dateFrom = event.dateFrom;
-  const dateTo = event.dateTo;
+function createTripEventsEditItemTemplate ({point, offerObj, destination}) {
+  const dateFrom = point.dateFrom;
+  const dateTo = point.dateTo;
   const editedFullDateFrom = editFullDate(dateFrom);
   const editedFullDateTo = editFullDate(dateTo);
-  const basePrice = event.basePrice;
-  const eventType = event.type;
+  const basePrice = point.basePrice;
+  const eventType = point.type;
   const city = destination.name;
 
 
@@ -20,10 +20,10 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
   function createOfferTemplate(offers) {
     return offers.map((offer) =>
       `<div class="event__offer-selector">
-         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${eventType}-${event.id}" type="checkbox"
+         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${eventType}-${point.id}" type="checkbox"
          name="event-offer-${eventType}"
-         ${event.offers.includes(offerObj.offers[0].id) ? 'checked' : ''}>
-         <label class="event__offer-label" for="event-offer-${eventType}-${event.id}">
+         ${offers.includes(offer.id) ? 'checked' : ''}>
+         <label class="event__offer-label" for="event-offer-${eventType}-${point.id}">
            <span class="event__offer-title">${offer.title}</span>
            &plus;&euro;&nbsp;
            <span class="event__offer-price">${offer.price}</span>
@@ -38,7 +38,7 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
           <span class="visually-hidden">Choose event type</span>
-          <img class="event__type-icon" width="17" height="17" src="img/icons/flight.png" alt="Event type icon">
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${eventType}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -48,7 +48,7 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
 
             <div class="event__type-item">
               <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">${eventType}</label>
+              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
             </div>
 
             <div class="event__type-item">
@@ -150,35 +150,53 @@ function createTripEventsEditItemTemplate (event, offerObj, destination) {
 </li>`);
 }
 
-export default class TripEventsEditItemView extends AbstractView {
+export default class TripEventsEditItemView extends AbstractStateFulView {
 
   handleFormSubmit = null;
 
-  constructor(event, offer, destination, onFormSubmit, onFormClose, onFormReset) {
+  constructor({point, offer, destination}, onFormSubmit, onFormClose, onFormReset) {
     super();
-    this.event = event;
+// console.log(point, 'zalupe')
+    this._setState(TripEventsEditItemView.parseEventToState(point));
+
+    this.event = point;
     this.offer = offer;
     this.destination = destination;
     this.handleFormSubmit = onFormSubmit;
     this.handleFormReset = onFormReset;
     this.handleFormClose = onFormClose;
-    this.element.querySelector('.event__save-btn').addEventListener('submit', this.submitFormHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.closeFormHandler);
-    this.element.querySelector('.event__reset-btn').addEventListener('reset', this.resetFormHandler);
+    // this.element.querySelector('.event__save-btn').addEventListener('submit', this.submitFormHandler);
+    // this.element.querySelector('.event__rollup-btn').addEventListener('click', this.closeFormHandler);
+    // this.element.querySelector('.event__reset-btn').addEventListener('reset', this.resetFormHandler);
+    // this.element.querySelector('.event__type-group').addEventListener('click', this.chooseTypeFormHandler);
+    this._restoreHandlers();
+    // console.log(this._state, 'ssss')
+
   }
 
   get template () {
-    return createTripEventsEditItemTemplate (this.event, this.offer, this.destination);
+    return createTripEventsEditItemTemplate ({
+      point:this._state,
+      offerObj:this.offer,
+      destination:this.destination,
+    });
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('.event__save-btn').addEventListener('submit', this.submitFormHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.closeFormHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('reset', this.resetFormHandler);
+    this.element.querySelector('.event__type-group').addEventListener('click', this.chooseTypeFormHandler);
   }
 
   submitFormHandler = (evt) => {
     evt.preventDefault();
-    this.handleFormSubmit(this.element);
+    this.handleFormSubmit(TripEventsEditItemView.parseStateToEvent(this._state));
   };
 
   closeFormHandler = (evt) => {
     evt.preventDefault();
-    this.handleFormClose(this.element);
+    this.handleFormClose(TripEventsEditItemView.parseStateToEvent(this._state));
   };
 
   resetFormHandler = (evt) => {
@@ -186,6 +204,21 @@ export default class TripEventsEditItemView extends AbstractView {
     this.handleFormReset(this.element);
   };
 
-}
+  chooseTypeFormHandler = (evt) => {
+    this.updateElement({type: evt.target.textContent});
+    // console.log(evt.target.textContent, 'target')
+    // console.log(this._state, 'state')
+    // console.log(this.point, 'point')
+    // this._state.type = evt.target.value;
+  };
 
+  static parseEventToState = (point) => ({...point});
+
+  static parseStateToEvent(state) {
+    const point = {...state};
+    return point;
+  }
+
+
+}
 export {createTripEventsEditItemTemplate};
