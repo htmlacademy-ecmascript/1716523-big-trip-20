@@ -1,7 +1,10 @@
-import { render, replace, remove} from './framework/render';
+import { render, replace, remove, RenderPosition} from './framework/render';
 import TripEventsEditItemView from './view/trip-events-edit-item-view.js';
 import TripEventsItemView from './view/trip-events-item-view.js';
 import PhotoeTemplate from './view/photo-view';
+import FormWithoutDestination from './view/event-without-destination-view';
+
+const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -16,11 +19,11 @@ export default class EventPointPresenter {
   #handleModeChange = null;
   #mode = Mode.DEFAULT;
 
-  constructor(pointListContainer, offers, point, destination, photoesContainer, onDataChange, onModeChange) {
+  constructor(pointListContainer, offers, point, destinations, photoesContainer, onDataChange, onModeChange) {
     this.pointListContainer = pointListContainer;
     this.point = point;
     this.offers = offers;
-    this.destination = destination;
+    this.destinations = destinations;
     this.photoesContainer = photoesContainer;
     this.handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
@@ -45,6 +48,7 @@ export default class EventPointPresenter {
   };
 
   #hideFormElement = () => {
+    this.editItemComponent.reset(this.point);
     this.#replaceFormToCard();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
@@ -69,19 +73,23 @@ export default class EventPointPresenter {
     this.handleDataChange(this.point);
   };
 
+  addNewEvent = () => {
+    render(new FormWithoutDestination(), this.pointListContainer, RenderPosition.AFTERBEGIN);
+  };
+
   init(point) {
 
     const prevItemComponent = this.itemComponent;
     const prevEditItemComponent = this.editItemComponent;
 
+    addNewEventButton.addEventListener('click', this.addNewEvent);
+
     this.currentOffer = this.offers.find((offer) => offer.type === this.point.type);
-    this.itemComponent = new TripEventsItemView(point, {...this.currentOffer}, this.destination, this.#showFormElement, this.#favoriteToggle);
-    // this.editItemComponent = new TripEventsEditItemView(point, {...this.currentOffer}, {...this.destination},
-    //   this.#submitFormElement, this.#hideFormElement, this.#resetForm);
+    this.itemComponent = new TripEventsItemView(point, {...this.currentOffer}, this.destinations, this.#showFormElement, this.#favoriteToggle);
     this.editItemComponent = new TripEventsEditItemView({
       point,
-      offer: this.currentOffer,
-      destination: this.destination
+      offer: this.offers,
+      destinations: this.destinations
     },
     this.#submitFormElement, this.#hideFormElement, this.#resetForm);
 
@@ -111,6 +119,7 @@ export default class EventPointPresenter {
 
   resetView() {
     if (this.#mode === Mode.EDITING) {
+      this.editItemComponent.reset(this.point);
       this.#replaceFormToCard();
     }
   }

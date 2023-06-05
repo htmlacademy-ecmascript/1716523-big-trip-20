@@ -1,5 +1,7 @@
-import { CITTES, DESCRIPTIONS } from '../const';
-import { getRandomArrayElement, getRandomInteger, createUniqId } from '../utils';
+// import { CITIES, DESCRIPTIONS } from '../const';
+// import { getRandomArrayElement, getRandomInteger } from '../utils';
+
+// let index = 0;
 
 function createPicturesArr (id, cityName, cityDescription) {
   return {
@@ -8,18 +10,33 @@ function createPicturesArr (id, cityName, cityDescription) {
   };
 }
 
-function generateDestinationObj() {
-  const uniqueId = createUniqId(1, 10);
-  const city = getRandomArrayElement(CITTES);
-  const description = getRandomArrayElement(DESCRIPTIONS);
+// function generateDestinationObj() {
+//   let uniqueId = 0;
+//   const city = CITIES[0];
 
+//   // for (let i = 0; i < CITTES.length; i++) {
+//   //   uniqueId = i;
+//   //   city = CITTES[i];
+//   // }
+
+//   const description = getRandomArrayElement(DESCRIPTIONS);
+
+//   return {
+//     id: uniqueId,
+//     name: city,
+//     description: description,
+//     pictures: Array.from({length: getRandomInteger(1, 4)}, () => createPicturesArr(uniqueId, city, description))
+//   };
+// }
+
+function generateDestinationObj(id, name, description, pictures) {
   return {
-    id: uniqueId(),
-    name: city,
-    description: description,
-    pictures: Array.from({length: getRandomInteger(1, 4)}, () => createPicturesArr(uniqueId(), city, description))
+    id,
+    name,
+    description,
+    pictures,
   };
 }
 
 
-export {generateDestinationObj};
+export {generateDestinationObj, createPicturesArr};

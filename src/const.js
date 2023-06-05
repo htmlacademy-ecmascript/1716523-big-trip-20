@@ -1,7 +1,7 @@
 
 
 const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
-const CITTES = ['Chamonix', 'Tokio', 'Yalta', 'Moscow', 'Saint-Petersburg', 'Geneva', 'London', 'Rome', 'Munich'];
+const CITIES = ['Chamonix', 'Tokio', 'Yalta', 'Moscow', 'Saint-Petersburg', 'Geneva', 'London', 'Rome', 'Munich'];
 
 const DESCRIPTIONS = ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',
@@ -23,4 +23,4 @@ const SortType = {
   OFFERS: 'offers',
 };
 
-export {POINT_TYPES, CITTES, DESCRIPTIONS, SortType};
+export {POINT_TYPES, CITIES, DESCRIPTIONS, SortType};

@@ -15,7 +15,7 @@ export default class AbstractStatefulView extends AbstractView {
     if (!update) {
       return;
     }
-
+    console.log('update', update)
     this._setState(update);
 
     this.#rerenderElement();
