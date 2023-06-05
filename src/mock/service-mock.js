@@ -1,10 +1,10 @@
-import { generateDestinationObj } from './destination-mock';
+import { createPicturesArr, generateDestinationObj } from './destination-mock';
 import { generateOffer } from './offer-mock';
 import { generatePoint } from './generate-point-mock';
-import { POINT_TYPES } from '../const';
+import { POINT_TYPES, CITIES, DESCRIPTIONS } from '../const';
 import { getRandomArrayElement, getRandomInteger } from '../utils';
 
-const DESTINATION_COUNT = 10;
+// const DESTINATION_COUNT = 10;
 const OFFER_COUNT = 5;
 const POINTS_COUNT = 5;
 
@@ -26,8 +26,17 @@ export default class MockService {
   }
 
 
+  // generateDestinations() {
+  //   return Array.from({length: DESTINATION_COUNT}, () => generateDestinationObj());
+  // }
+
   generateDestinations() {
-    return Array.from({length: DESTINATION_COUNT}, () => generateDestinationObj());
+    const destinations = CITIES.map((city, index) => {
+      const description = getRandomArrayElement(DESCRIPTIONS);
+      return generateDestinationObj(index, city, description,
+        Array.from({length: getRandomInteger(1, 4)}, () => createPicturesArr(index, city, description)));
+    });
+    return destinations;
   }
 
   generateOffers() {

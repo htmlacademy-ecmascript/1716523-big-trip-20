@@ -63,11 +63,11 @@ export default class TripEventsItemView extends AbstractView {
   handleEditClick = null;
   favoriteButton = null;
 
-  constructor(event, offer, destination, onEditClick, onFavoriteToggle) {
+  constructor(event, offer, destinations, onEditClick, onFavoriteToggle) {
     super();
     this.event = event;
     this.offer = offer;
-    this.destination = destination;
+    this.destination = destinations.find((el) => event.destination === el.id);
     this.handleEditClick = onEditClick;
     this.handleToggleFavorite = onFavoriteToggle;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.editClickHandler);

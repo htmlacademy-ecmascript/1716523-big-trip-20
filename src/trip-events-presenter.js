@@ -4,7 +4,6 @@ import PhotoesContainer from './view/event-photoes-container-view';
 import NoEvents from './view/no-events-view';
 import TripInfoView from './view/trip-info-view.js';
 import TripSortView from './view/trip-sort-view.js';
-import FormWithoutDestination from './view/event-without-destination-view';
 import EventPointPresenter from './point-presenter';
 import { eventsSort, updateItem } from './utils';
 import { SortType } from './const';
@@ -12,7 +11,6 @@ import { SortType } from './const';
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
 
-const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
 export default class TripEventsListPresenter {
   tripEventsList = new TripEventsListView();
   points = [];
@@ -41,13 +39,6 @@ export default class TripEventsListPresenter {
     this.#sortPoints(this.#currentSortType);
 
     this.#renderSort(this.listContainer);
-
-    const addNewEvent = () => {
-      render(new FormWithoutDestination(), this.tripEventsList.element, RenderPosition.AFTERBEGIN);
-    };
-
-    addNewEventButton.addEventListener('click', addNewEvent);
-
   }
 
   #renderSort = (container) => {
@@ -85,8 +76,8 @@ export default class TripEventsListPresenter {
       render (noEventsComponent, this.listContainer);
     } else {
       render (this.tripEventsList, this.listContainer);
-      this.points.forEach((point, i) => {
-        const eventPresenter = new EventPointPresenter(this.tripEventsList.element, this.offers, point, this.destinations[i],
+      this.points.forEach((point) => {
+        const eventPresenter = new EventPointPresenter(this.tripEventsList.element, this.offers, point, this.destinations,
           this.#photoesContainer, this.#handlePointChange, this.#handleModeChange);
         eventPresenter.init(point);
         this.#pointsPresenters.set(point.id, eventPresenter);
