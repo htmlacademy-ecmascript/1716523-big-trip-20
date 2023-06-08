@@ -22,7 +22,7 @@ function createTripEventsEditItemTemplate ({state, offerObj, destinations}) {
   const eventType = point.type;
   const city = destination.name;
   const isChecked = point.isChecked;
-
+// console.log('point', point);
 
   function createPhotoeTemplate (photoes) {
     return photoes.map((photo) =>`<img class="event__photo" src="${photo.src}" alt="event photo">`).join('') ;
@@ -314,9 +314,10 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
         ...this._state.point,
         type: evt.target.value,
         offers:  [],
-        isChecked: true,
+        // isChecked: !this.isChecked,
       }
     });
+    evt.target.setAttribute('checked', true);
   };
 
   static parseEventToState = ({point}) => ({point});
