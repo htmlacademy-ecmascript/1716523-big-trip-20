@@ -4,8 +4,12 @@ import AbstractStateFulView from '../framework/view/abstract-stateful-view';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
+import dayjs from 'dayjs';
 
-function createTripEventsEditItemTemplate ({state, offerObj, destinations}) {
+import { getRandomInteger } from '../utils';
+
+
+function createNewPointTemplate ({state, offerObj, destinations}) {
   const {point} = state;
 
   let destination;
@@ -38,7 +42,7 @@ function createTripEventsEditItemTemplate ({state, offerObj, destinations}) {
     return offers.map((offer) =>
       `<div class="event__offer-selector">
          <input class="event__offer-checkbox  visually-hidden" id="${offer.id}" type="checkbox"
-         name="event-offer-${eventType}" ${point.offers.includes(offer.id) ? 'checked' : ''}
+         name="event-offer-${eventType}"
          >
          <label class="event__offer-label" for="event-offer-${eventType}-${offer.id}">
            <span class="event__offer-title">${offer.title}</span>
@@ -133,8 +137,7 @@ function createTripEventsEditItemTemplate ({state, offerObj, destinations}) {
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
-      <button class="event__rollup-btn" type="button">
+      <button class="event__reset-btn" type="reset">Cancel</button>
         <span class="visually-hidden">Open event</span>
       </button>
     </header>
@@ -162,27 +165,37 @@ function createTripEventsEditItemTemplate ({state, offerObj, destinations}) {
 }
 
 
-export default class TripEventsEditItemView extends AbstractStateFulView {
+export default class NewPointItemView extends AbstractStateFulView {
 
   handleFormSubmit = null;
   datepicker = null;
 
 
-  constructor({point, offer, destinations}, onFormSubmit, onFormClose, onFormDelete) {
+  constructor({point, offer, destinations}, onFormSubmit, onFormDelete, onAddNewPoint) {
     super();
-    this._setState(TripEventsEditItemView.parseEventToState({point}));
+    this._setState({point: {
+      basePrice: '',
+      dateFrom: dayjs().format('YYYY-MM-DD:mm:ss'),
+      dateTo: dayjs().format('YYYY-MM-DD:mm:ss'),
+      destination: '',
+      id: getRandomInteger(1, 100),
+      isFavorite: true,
+      offers: [],
+      type: offer[0].type,
+    }
+    });
 
     this.event = point;
     this.offer = offer;
     this.destinations = destinations;
     this.handleFormSubmit = onFormSubmit;
     this.handleFormDelete = onFormDelete;
-    this.handleFormClose = onFormClose;
+    this.handleAddPoint = onAddNewPoint;
     this._restoreHandlers();
   }
 
   get template () {
-    return createTripEventsEditItemTemplate ({
+    return createNewPointTemplate ({
       state:this._state,
       offerObj:this.offer,
       destinations:this.destinations,
@@ -191,7 +204,6 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
 
   _restoreHandlers() {
     this.element.querySelector('.event--edit').addEventListener('submit', this.submitFormHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.closeFormHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.deletePointHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.chooseTypeFormHandler);
     this.element.querySelector('.event__available-offers').addEventListener('click', this.chooseOffersHandler);
@@ -304,21 +316,16 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
 
   submitFormHandler = (evt) => {
     evt.preventDefault();
-    this.handleFormSubmit(TripEventsEditItemView.parseStateToEvent(this._state));
-  };
-
-  closeFormHandler = (evt) => {
-    evt.preventDefault();
-    this.handleFormClose();
+    this.handleFormSubmit(NewPointItemView.parseStateToEvent(this._state));
   };
 
   reset = (point) => {
-    this.updateElement(TripEventsEditItemView.parseEventToState({point}));
+    this.updateElement(NewPointItemView.parseEventToState({point}));
   };
 
   deletePointHandler = (evt) => {
     evt.preventDefault();
-    this.handleFormDelete(TripEventsEditItemView.parseStateToEvent(this._state));
+    this.handleFormDelete();
   };
 
   chooseTypeFormHandler = (evt) => {
@@ -336,4 +343,4 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
   static parseStateToEvent = (state) => state.point;
 
 }
-export {createTripEventsEditItemTemplate};
+export { createNewPointTemplate };

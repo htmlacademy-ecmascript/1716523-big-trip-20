@@ -78,9 +78,9 @@ function isPointPast(point) {
   return dayjs().isAfter(point.dateTo);
 }
 
-function updateItem(items, update) {
-  return items.map((item) => item.id === update.id ? update : item);
-}
+// function updateItem(items, update) {
+//   return items.map((item) => item.id === update.id ? update : item);
+// }
 
 const eventsSort = {
   [SortType.DAY]: (points) => points.slice(0).sort((a, b) => dayjs(a.dateFrom).toDate() - dayjs(b.dateFrom).toDate()),
@@ -95,4 +95,6 @@ const eventsSort = {
 };
 
 
-export {getRandomArrayElement, editEventsDate, getRandomNumber, editEventsTime, createUniqId, getRandomInteger, editFullDate, createUniqIdAcc, filter, updateItem, eventsSort};
+export {getRandomArrayElement, editEventsDate, getRandomNumber,
+  editEventsTime, createUniqId, getRandomInteger, editFullDate,
+  createUniqIdAcc, filter, eventsSort, filterType};

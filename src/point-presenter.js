@@ -1,10 +1,8 @@
-import { render, replace, remove, RenderPosition} from './framework/render';
+import { render, replace, remove} from './framework/render';
 import TripEventsEditItemView from './view/trip-events-edit-item-view.js';
 import TripEventsItemView from './view/trip-events-item-view.js';
-import PhotoeTemplate from './view/photo-view';
-import FormWithoutDestination from './view/event-without-destination-view';
-
-const addNewEventButton = document.querySelector('.trip-main__event-add-btn');
+import { UserAction, UpdateType } from './const';
+import NewPointItemView from './view/new-point-item-view';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -42,7 +40,12 @@ export default class EventPointPresenter {
     document.addEventListener('keydown', this.#escKeyDownHandler);
   };
 
-  #submitFormElement = () => {
+  #submitFormElement = (updatedPoint) => {
+    this.handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      updatedPoint,
+    );
     this.#replaceFormToCard();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
@@ -53,8 +56,20 @@ export default class EventPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
-  #resetForm = () => {
-    document.querySelector('form').reset();
+  #deletePoint = (point) => {
+    this.handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
+  #addPoint = (point) => {
+    this.handleDataChange(
+      UserAction.ADD_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 
   #replaceCardToForm() {
@@ -69,29 +84,33 @@ export default class EventPointPresenter {
   }
 
   #favoriteToggle = () => {
-    this.point = {...this.point, isFavorite:!this.point.isFavorite};
-    this.handleDataChange(this.point);
-  };
-
-  addNewEvent = () => {
-    render(new FormWithoutDestination(), this.pointListContainer, RenderPosition.AFTERBEGIN);
+    this.handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.point, isFavorite: !this.point.isFavorite},
+    );
   };
 
   init(point) {
-
+    this.point = point;
     const prevItemComponent = this.itemComponent;
     const prevEditItemComponent = this.editItemComponent;
 
-    addNewEventButton.addEventListener('click', this.addNewEvent);
+    this.itemComponent = new TripEventsItemView(point, this.offers, this.destinations, this.#showFormElement, this.#favoriteToggle);
 
-    this.currentOffer = this.offers.find((offer) => offer.type === this.point.type);
-    this.itemComponent = new TripEventsItemView(point, {...this.currentOffer}, this.destinations, this.#showFormElement, this.#favoriteToggle);
     this.editItemComponent = new TripEventsEditItemView({
       point,
       offer: this.offers,
       destinations: this.destinations
     },
-    this.#submitFormElement, this.#hideFormElement, this.#resetForm);
+    this.#submitFormElement, this.#hideFormElement, this.#deletePoint);
+
+    this.newPointComponent = new NewPointItemView({
+      point,
+      offer: this.offers,
+      destinations: this.destinations
+    },
+    this.#submitFormElement, this.#hideFormElement, this.#deletePoint, this.#addPoint);
 
     if (prevItemComponent === null || prevEditItemComponent === null) {
       render(this.itemComponent, this.pointListContainer);
@@ -108,8 +127,6 @@ export default class EventPointPresenter {
 
     remove(prevItemComponent);
     remove(prevEditItemComponent);
-
-    render (new PhotoeTemplate(this.destination), this.photoesContainer.element);
   }
 
   destroy() {

@@ -6,7 +6,7 @@ import { getRandomArrayElement, getRandomInteger } from '../utils';
 
 // const DESTINATION_COUNT = 10;
 const OFFER_COUNT = 5;
-const POINTS_COUNT = 5;
+const POINTS_COUNT = 2;
 
 export default class MockService {
   #destinations = this.generateDestinations();
@@ -32,6 +32,7 @@ export default class MockService {
 
   generateDestinations() {
     const destinations = CITIES.map((city, index) => {
+      index = index + 1;
       const description = getRandomArrayElement(DESCRIPTIONS);
       return generateDestinationObj(index, city, description,
         Array.from({length: getRandomInteger(1, 4)}, () => createPicturesArr(index, city, description)));
@@ -51,7 +52,7 @@ export default class MockService {
       const type = getRandomArrayElement(POINT_TYPES);
       const destination = getRandomArrayElement(this.destinations);
 
-      const hasOffers = getRandomInteger(0, 1);
+      const hasOffers = 1;
 
       const offersByType = this.offers.find((offerByType) => offerByType.type === type);
 

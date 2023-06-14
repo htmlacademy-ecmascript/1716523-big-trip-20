@@ -1,7 +1,7 @@
 
 import AbstractView from '../framework/view/abstract-view';
 
-function createFilterItem(filter) {
+function createFilterItem(filter, currentFilterType) {
   return `  <div class="trip-filters__filter">
   <input
   id="filter-${filter.type}"
@@ -9,7 +9,8 @@ function createFilterItem(filter) {
   type="radio"
   name="trip-filter"
   value="${filter.type}"
-  ${(filter.hasPoints) ? '' : 'disabled'}
+  ${filter.type === currentFilterType ? 'checked' : ''}
+  ${(filter.count !== 0) ? '' : 'disabled'}
   >
   <label
   class="trip-filters__filter-label"
@@ -30,13 +31,23 @@ function createFilterItemTemplate(filters) {
 
 export default class HeaderFiltersView extends AbstractView {
   #filters;
+  #onFilterChange = null;
+  #currentFilterType = null;
 
-  constructor(filters) {
+  constructor({filters, currentFilterType, onFilterChange}) {
     super();
     this.#filters = filters;
+    this.#currentFilterType = currentFilterType;
+    this.#onFilterChange = onFilterChange;
+    this.element.addEventListener('change', this.#changeFilterHandler);
   }
 
   get template() {
     return createFilterItemTemplate(this.#filters);
   }
+
+  #changeFilterHandler = (evt) => {
+    evt.preventDefault();
+    this.#onFilterChange(evt.target.value);
+  };
 }
