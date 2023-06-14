@@ -23,4 +23,23 @@ const SortType = {
   OFFERS: 'offers',
 };
 
-export {POINT_TYPES, CITIES, DESCRIPTIONS, SortType};
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+const NoEventsTexts = {
+  everything: 'Click New Event to create your first point',
+  future: 'There are no future events now',
+  present: 'There are no present events now',
+  past: 'There are no past events now',
+};
+
+export {POINT_TYPES, CITIES, DESCRIPTIONS, SortType, UserAction, UpdateType, NoEventsTexts};

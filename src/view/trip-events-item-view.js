@@ -1,17 +1,33 @@
 
 import AbstractView from '../framework/view/abstract-view';
 import { editEventsDate, editEventsTime } from '../utils';
+import dayjs from 'dayjs';
 
 function createTripEventsItemTemplate (event, offerObj, destination) {
-  const dateFrom = event.dateFrom;
-  const dateTo = event.dateTo;
+  const dateFrom = event.dateFrom ? event.dateFrom : '';
+  const dateTo = event.dateTo ? event.dateTo : '';
   const editedDate = editEventsDate(dateFrom);
   const editedTimeFrom = editEventsTime(dateFrom);
   const editedTimeTo = editEventsTime(dateTo);
-  const basePrice = event.basePrice;
-  const eventType = event.type.toLowerCase();
-  const city = destination.name;
+  const basePrice = event.basePrice ? event.basePrice : '';
+  const eventType = event.type ? event.type.toLowerCase() : '';
+  const city = event.destination ? destination.name : '';
   const isFavorite = event.isFavorite;
+
+  let currentOffer;
+  if (event.type) {
+    currentOffer = offerObj.find((offer) => offer.type.toLowerCase() === event.type.toLowerCase());
+  } else {
+    currentOffer = {
+      offers: [],
+      type: '',
+    };
+  }
+
+  function countTimeDiff(startTime, endTime) {
+    const timeDiff = endTime.diff(startTime, 'M');
+    return timeDiff;
+  }
 
 
   function createOfferTemplate(offers) {
@@ -21,6 +37,15 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${offer.price}</span>
       </li>`).join('');
+  }
+
+  function getCheckedOffers() {
+    const result = [];
+    event.offers.forEach((offerId) => {
+      result.push(currentOffer.offers.find(({ id }) => offerId === id));
+    });
+
+    return result;
   }
 
   return (`<li class="trip-events__item">
@@ -36,14 +61,14 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
         &mdash;
         <time class="event__end-time" datetime="2019-03-18T11:00">${editedTimeTo}</time>
       </p>
-      <p class="event__duration">30M</p>
+      <p class="event__duration">${countTimeDiff(dayjs(dateFrom), dayjs(dateTo))} M</p>
     </div>
     <p class="event__price">
       &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
-    ${ createOfferTemplate(offerObj.offers)}
+    ${ createOfferTemplate(getCheckedOffers())}
     </ul>
     <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
       <span class="visually-hidden">Add to favorite</span>
@@ -63,10 +88,10 @@ export default class TripEventsItemView extends AbstractView {
   handleEditClick = null;
   favoriteButton = null;
 
-  constructor(event, offer, destinations, onEditClick, onFavoriteToggle) {
+  constructor(event, offers, destinations, onEditClick, onFavoriteToggle) {
     super();
     this.event = event;
-    this.offer = offer;
+    this.offers = offers;
     this.destination = destinations.find((el) => event.destination === el.id);
     this.handleEditClick = onEditClick;
     this.handleToggleFavorite = onFavoriteToggle;
@@ -76,7 +101,7 @@ export default class TripEventsItemView extends AbstractView {
   }
 
   get template () {
-    return createTripEventsItemTemplate (this.event, this.offer, this.destination);
+    return createTripEventsItemTemplate (this.event, this.offers, this.destination);
   }
 
   editClickHandler = (evt) => {
