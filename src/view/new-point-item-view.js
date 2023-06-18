@@ -6,11 +6,9 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import dayjs from 'dayjs';
 
-import { getRandomInteger } from '../utils';
-
 
 function createNewPointTemplate ({state, offerObj, destinations}) {
-  const {point} = state;
+  const point = state;
 
   let destination;
   if (point.destination) {
@@ -136,7 +134,9 @@ function createNewPointTemplate ({state, offerObj, destinations}) {
         <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit" ${point.destination && point.basePrice ? '' : 'disabled'}>
+      ${point.isSaving ? 'Saving...' : 'save'}
+      </button>
       <button class="event__reset-btn" type="reset">Cancel</button>
         <span class="visually-hidden">Open event</span>
       </button>
@@ -173,18 +173,17 @@ export default class NewPointItemView extends AbstractStateFulView {
 
   constructor({point, offer, destinations}, onFormSubmit, onFormDelete, onAddNewPoint) {
     super();
-    this._setState({point: {
+    this._setState(NewPointItemView.parseEventToState({
       basePrice: '',
-      dateFrom: dayjs().format('YYYY-MM-DD:mm:ss'),
-      dateTo: dayjs().format('YYYY-MM-DD:mm:ss'),
+      dateFrom: dayjs().toDate(),
+      dateTo: dayjs().toDate(),
       destination: '',
-      id: getRandomInteger(1, 100),
+      id: 99,
       isFavorite: true,
       offers: [],
       type: offer[0].type,
     }
-    });
-
+    ));
     this.event = point;
     this.offer = offer;
     this.destinations = destinations;
@@ -216,14 +215,17 @@ export default class NewPointItemView extends AbstractStateFulView {
   }
 
   changeDestinationHandler = (evt) => {
-    evt.preventDefault();
-    const changedDestinationId = this.destinations.find((destination) =>evt.target.value === destination.name).id;
-    this.updateElement({
-      point:{
-        ...this._state.point,
+    if (evt.target.value) {
+      evt.preventDefault();
+      const changedDestinationId = this.destinations.find((destination) =>evt.target.value === destination.name).id;
+      this.updateElement({
+        ...this._state,
         destination: changedDestinationId,
-      }
-    });
+      });
+    } else {
+      evt.target.parentElement.setAttribute('style', 'border-bottom: 2px solid red');
+      this.element.querySelector('.event__save-btn').setAttribute('disabled', true);
+    }
   };
 
   removeElement() {
@@ -237,19 +239,15 @@ export default class NewPointItemView extends AbstractStateFulView {
 
   #dateFromChangeHandler = ([userDateFrom]) => {
     this._setState({
-      point:{
-        ...this._state.point,
-        dateFrom: userDateFrom,
-      }
+      ...this._state,
+      dateFrom: userDateFrom,
     });
   };
 
   #dateToChangeHandler = ([userDateTo]) => {
     this._setState({
-      point: {
-        ...this._state.point,
-        dateTo: userDateTo,
-      }
+      ...this._state,
+      dateTo: userDateTo,
     });
   };
 
@@ -267,6 +265,7 @@ export default class NewPointItemView extends AbstractStateFulView {
     this.datepicker = flatpickr(
       this.element.querySelector('#event-end-time-1'), {
         dateFormat: 'd/m/y H:i',
+        minDate: 'today',
         defaultDate: this._state.dateTo,
         onChange: this.#dateToChangeHandler,
       }
@@ -274,18 +273,23 @@ export default class NewPointItemView extends AbstractStateFulView {
   }
 
   changePriceHandler = (evt) => {
-    evt.preventDefault();
-    this._setState({
-      point: {
-        ...this._state.point,
+    if (evt.target.value) {
+      evt.preventDefault();
+      this._setState({
+        ...this._state,
         basePrice: parseInt(evt.target.value, 10)
-      }
-    });
+      });
+      evt.target.parentElement.removeAttribute('style', 'border-bottom: 2px solid red');
+      this.element.querySelector('.event__save-btn').removeAttribute('disabled', true);
+    } else {
+      evt.target.parentElement.setAttribute('style', 'border-bottom: 2px solid red');
+      this.element.querySelector('.event__save-btn').setAttribute('disabled', true);
+    }
   };
 
   chooseOffersHandler = (evt) => {
     evt.preventDefault();
-    let offersIds = this._state.point.offers;
+    let offersIds = this._state.offers;
     let inputTarget;
     if (evt.target.tagName.toLowerCase() === 'span') {
       inputTarget = evt.target.parentElement.previousElementSibling;
@@ -293,11 +297,11 @@ export default class NewPointItemView extends AbstractStateFulView {
       inputTarget = evt.target.previousElementSibling;
     }
 
-    if (offersIds.includes(Number(inputTarget.id))) {
-      const result = offersIds.filter((el) => el !== Number(inputTarget.id));
+    if (offersIds.includes(inputTarget.id)) {
+      const result = offersIds.filter((el) => el !== inputTarget.id);
       offersIds = result;
     } else {
-      offersIds.push(Number(inputTarget.id));
+      offersIds.push(inputTarget.id);
     }
 
     if(inputTarget.hasAttribute('checked')) {
@@ -307,10 +311,8 @@ export default class NewPointItemView extends AbstractStateFulView {
     }
 
     this._setState({
-      point: {
-        ...this._state.point,
-        offers: offersIds,
-      }
+      ...this._state,
+      offers: offersIds,
     });
   };
 
@@ -330,17 +332,24 @@ export default class NewPointItemView extends AbstractStateFulView {
 
   chooseTypeFormHandler = (evt) => {
     this.updateElement({
-      point: {
-        ...this._state.point,
-        type: evt.target.value,
-      }
+      ...this._state,
+      type: evt.target.value,
     });
     evt.target.setAttribute('checked', true);
   };
 
-  static parseEventToState = ({point}) => ({point});
+  static parseEventToState = (point) => ({
+    ...point,
+    isDeleting: false,
+    isSaving: false
+  });
 
-  static parseStateToEvent = (state) => state.point;
+  static parseStateToEvent(state) {
+    delete state.isDeleting;
+    delete state.isSaving;
+    delete state.id;
+    return state;
+  }
 
 }
 export { createNewPointTemplate };

@@ -1,7 +1,6 @@
 
 import TripEventsListPresenter from './trip-events-presenter.js';
 import PointsModel from './model/way-point-model.js';
-import MockService from './mock/service-mock.js';
 
 import FilterPresenter from './filter-presenter.js';
 
@@ -10,17 +9,27 @@ import { render } from './framework/render.js';
 
 import FilterModel from './model/filter-model.js';
 
+import PointsApiService from './points-api-service.js';
+
+const AUTHORIZATION = 'Basic kr777B55vrW3Zi5s';
+const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
+
 const siteMainElement = document.querySelector('.page-main');
 const tripEventsElement = siteMainElement.querySelector('.trip-events');
-const {offers, destinations, points} = new MockService();
 
 const siteHeaderElement = document.querySelector('.page-header');
 const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const tripMainElement = document.querySelector('.trip-main');
+
+
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
+
 const filterModel = new FilterModel();
 
-const pointsModel = new PointsModel(offers, destinations, points);
-const eventsListPresenter = new TripEventsListPresenter({listContainer: tripEventsElement, pointsModel, filterModel});
+const eventsListPresenter = new TripEventsListPresenter({
+  listContainer: tripEventsElement, pointsModel, filterModel, onNewPointDestroy: handleNewPointFormClose});
 
 const filterPresenter = new FilterPresenter({
   filterContainer:siteFiltersElement,
@@ -32,12 +41,22 @@ const newPointButtonComponent = new NewPointButtonView({
   onClick: handleNewPointButtonClick
 });
 
-render(newPointButtonComponent, tripMainElement);
+function handleNewPointFormClose() {
+  newPointButtonComponent.element.disabled = false;
+}
 
 function handleNewPointButtonClick() {
   eventsListPresenter.createPoint();
+  newPointButtonComponent.element.disabled = true;
 }
 
+pointsModel.init()
+  .finally(() => {
+    render(newPointButtonComponent, tripMainElement);
+  });
+
+filterPresenter.init();
 
 eventsListPresenter.init();
-filterPresenter.init();
+
+

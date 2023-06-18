@@ -21,7 +21,7 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    const points = this.#pointsModel.points;
+    const points = this.#pointsModel.getPoints();
 
     return Object.values(filterType).map((type) => ({
       type,

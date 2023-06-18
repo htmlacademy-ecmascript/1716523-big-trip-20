@@ -1,6 +1,5 @@
 import {remove, render, RenderPosition} from './framework/render.js';
 import {UserAction, UpdateType} from './const.js';
-import { getRandomInteger } from './utils.js';
 import NewPointItemView from './view/new-point-item-view.js';
 
 export default class NewPointPresenter {
@@ -32,10 +31,32 @@ export default class NewPointPresenter {
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#newPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#newPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#newPointComponent.shake(resetFormState);
+  }
+
+
   destroy() {
     if (this.#newPointComponent === null) {
       return;
     }
+
+    this.#handleDestroy();
 
     remove(this.#newPointComponent);
     this.#newPointComponent = null;
@@ -47,9 +68,11 @@ export default class NewPointPresenter {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: getRandomInteger(1, 1000), ...point},
+      {...point,
+        dateFrom: new Date (point.dateFrom),
+        dateTo: new Date(point.dateTo)
+      }
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

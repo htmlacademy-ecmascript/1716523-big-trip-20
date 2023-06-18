@@ -1,7 +1,6 @@
 
 import AbstractView from '../framework/view/abstract-view';
-import { editEventsDate, editEventsTime } from '../utils';
-import dayjs from 'dayjs';
+import { editEventsDate, editEventsTime, getPointDuration } from '../utils';
 
 function createTripEventsItemTemplate (event, offerObj, destination) {
   const dateFrom = event.dateFrom ? event.dateFrom : '';
@@ -22,11 +21,6 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
       offers: [],
       type: '',
     };
-  }
-
-  function countTimeDiff(startTime, endTime) {
-    const timeDiff = endTime.diff(startTime, 'M');
-    return timeDiff;
   }
 
 
@@ -61,7 +55,7 @@ function createTripEventsItemTemplate (event, offerObj, destination) {
         &mdash;
         <time class="event__end-time" datetime="2019-03-18T11:00">${editedTimeTo}</time>
       </p>
-      <p class="event__duration">${countTimeDiff(dayjs(dateFrom), dayjs(dateTo))} M</p>
+      <p class="event__duration">${getPointDuration(dateFrom, dateTo)}</p>
     </div>
     <p class="event__price">
       &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
