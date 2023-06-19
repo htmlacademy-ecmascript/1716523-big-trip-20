@@ -4,10 +4,6 @@ import { getTripInfoDestinations } from '../utils';
 
 function createTripInfoTemplate (points, offers, destinations) {
 
-  // console.log(points, 'points')
-  // console.log(offers, 'offers')
-  // console.log(destinations, 'destinations')
-
   return (
     `<section class="trip-main__trip-info  trip-info">
   <div class="trip-info__main">

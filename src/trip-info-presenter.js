@@ -1,5 +1,5 @@
 import TripInfoView from './view/trip-info-view';
-import { RenderPosition, render, remove, replace } from './framework/render';
+import { RenderPosition, render, remove} from './framework/render';
 
 export default class TripInfoPresenter {
 
@@ -14,7 +14,6 @@ export default class TripInfoPresenter {
   #sum = 0;
 
   #tripInfoComponent = null;
-  // #modelEventHandler = null;
 
   constructor(container, pointsModel) {
 
@@ -37,7 +36,6 @@ export default class TripInfoPresenter {
       render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
     }
 
-    // replace(this.#tripInfoComponent, prevtripInfoComponent);
     remove(prevtripInfoComponent);
   };
 

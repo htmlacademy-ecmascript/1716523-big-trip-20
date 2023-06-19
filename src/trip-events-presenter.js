@@ -2,7 +2,6 @@ import { render, RenderPosition, replace, remove } from './framework/render';
 import TripEventsListView from './view/trip-events-list-view';
 import PhotoesContainer from './view/event-photoes-container-view';
 import NoEvents from './view/no-events-view';
-// import TripInfoView from './view/trip-info-view.js';
 import TripSortView from './view/trip-sort-view.js';
 import EventPointPresenter from './point-presenter';
 import { eventsSort } from './utils';
@@ -98,10 +97,6 @@ export default class TripEventsListPresenter {
 
     this.#renderSort(this.listContainer);
 
-    // const tripInfoPresenter = new TripInfoPresenter(siteTripInfoElement, this.pointsModel);
-    // tripInfoPresenter.init();
-
-    // render (new TripInfoView(this.#sortedPoints, this.offers, this.destinations), siteTripInfoElement, RenderPosition.AFTERBEGIN);
   }
 
   #renderSort = (container) => {
@@ -141,10 +136,6 @@ export default class TripEventsListPresenter {
     this.#renderPoints(this.points);
   };
 
-  // #renderTripInfo = () => {
-  //   render (new TripInfoView(this.#sortedPoints, this.offers, this.destinations), siteTripInfoElement, RenderPosition.AFTERBEGIN);
-  // };
-
   showMessage = () => {
     if (this.#filteredPoints.length === 0 && !this.#isPointCreating && !this.#isLoading) {
       this.#noEventsComponent = new NoEvents(this.#filterType);
@@ -168,7 +159,6 @@ export default class TripEventsListPresenter {
       this.#pointsPresenters.set(point.id, eventPresenter);
       remove(this.#noEventsComponent);
     });
-    // this.#renderTripInfo();
   }
 
   createPoint() {
