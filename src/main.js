@@ -11,6 +11,7 @@ import FilterModel from './model/filter-model.js';
 
 import PointsApiService from './points-api-service.js';
 
+
 const AUTHORIZATION = 'Basic kr777B55vrW3Zi5s';
 const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
 
@@ -37,6 +38,7 @@ const filterPresenter = new FilterPresenter({
   filterModel,
 });
 
+
 const newPointButtonComponent = new NewPointButtonView({
   onClick: handleNewPointButtonClick
 });
@@ -56,7 +58,4 @@ pointsModel.init()
   });
 
 filterPresenter.init();
-
 eventsListPresenter.init();
-
-
