@@ -46,7 +46,6 @@ export default class EventPointPresenter {
       UpdateType.MINOR,
       updatedPoint,
     );
-    this.#replaceFormToCard();
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
@@ -128,6 +127,40 @@ export default class EventPointPresenter {
     remove(prevItemComponent);
     remove(prevEditItemComponent);
   }
+
+  setSaving() {
+    this.editItemComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.editItemComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.itemComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.editItemComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.editItemComponent.shake(resetFormState);
+  }
+
 
   destroy() {
     remove(this.itemComponent);

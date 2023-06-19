@@ -1,13 +1,11 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import { SortType } from './const';
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
+dayjs.extend(duration);
 
-function getRandomNumber() {
-  return Math.floor(Math.random() * 100);
-}
+const MSEC_IN_HOUR = 3600000;
+const MSEC_IN_DAY = 86400000;
 
 const DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'hh:mm';
@@ -25,31 +23,24 @@ function editEventsTime (eventsDate) {
   return dayjs(eventsDate).format(TIME_FORMAT);
 }
 
-function createUniqIdAcc () {
-  let uniqId = 1;
-  return function () {
-    return uniqId++;
-  };
-}
+function getPointDuration(dateFrom, dateTo) {
+  const timeDiff = dayjs(dateTo).diff(dayjs(dateFrom));
 
-const getRandomInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-};
+  let pointDuration = 0;
 
-function createUniqId (min, max) {
-  const uniqIdArr = [];
-  return function() {
-    while(uniqIdArr.length < max) {
-      const currentValue = getRandomInteger(min, max);
-      if (!uniqIdArr.includes(currentValue)) {
-        uniqIdArr.push(currentValue);
-        return currentValue;
-      }
-    }
-  };
+  switch (true) {
+    case (timeDiff >= MSEC_IN_DAY):
+      pointDuration = dayjs.duration(timeDiff).format('DD[d] HH[h] mm[m]');
+      break;
+    case (timeDiff >= MSEC_IN_HOUR):
+      pointDuration = dayjs.duration(timeDiff).format('HH[h] mm[m]');
+      break;
+    case (timeDiff < MSEC_IN_HOUR):
+      pointDuration = dayjs.duration(timeDiff).format('mm[m]');
+      break;
+  }
+
+  return pointDuration;
 }
 
 const filterType = {
@@ -78,10 +69,6 @@ function isPointPast(point) {
   return dayjs().isAfter(point.dateTo);
 }
 
-// function updateItem(items, update) {
-//   return items.map((item) => item.id === update.id ? update : item);
-// }
-
 const eventsSort = {
   [SortType.DAY]: (points) => points.slice(0).sort((a, b) => dayjs(a.dateFrom).toDate() - dayjs(b.dateFrom).toDate()),
   [SortType.PRICE]: (points) => points.slice(0).sort((a, b) => a.basePrice - b.basePrice),
@@ -95,6 +82,6 @@ const eventsSort = {
 };
 
 
-export {getRandomArrayElement, editEventsDate, getRandomNumber,
-  editEventsTime, createUniqId, getRandomInteger, editFullDate,
-  createUniqIdAcc, filter, eventsSort, filterType};
+export { editEventsDate,
+  editEventsTime, editFullDate,
+  filter, eventsSort, filterType, getPointDuration};
