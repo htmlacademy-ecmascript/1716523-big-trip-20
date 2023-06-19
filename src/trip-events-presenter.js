@@ -115,7 +115,6 @@ export default class TripEventsListPresenter {
 
   };
 
-
   #sortPoints = (sortType) => {
     this.#filterType = this.#filterModel.filter;
     const points = this.pointsModel.getPoints();
@@ -168,7 +167,6 @@ export default class TripEventsListPresenter {
     this.#isPointCreating = true;
     remove(this.#noEventsComponent);
   }
-
 
   #clearPointsList(resetSortType = false) {
     this.#newPointPresenter.destroy();
