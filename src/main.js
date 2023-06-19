@@ -10,6 +10,9 @@ import { render } from './framework/render.js';
 import FilterModel from './model/filter-model.js';
 
 import PointsApiService from './points-api-service.js';
+// import TripInfoView from './view/trip-info-view.js';
+import TripInfoPresenter from './trip-info-presenter.js';
+
 
 const AUTHORIZATION = 'Basic kr777B55vrW3Zi5s';
 const END_POINT = 'https://20.ecmascript.pages.academy/big-trip';
@@ -20,6 +23,7 @@ const tripEventsElement = siteMainElement.querySelector('.trip-events');
 const siteHeaderElement = document.querySelector('.page-header');
 const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const tripMainElement = document.querySelector('.trip-main');
+const siteTripInfoElement = siteHeaderElement.querySelector('.trip-main');
 
 
 const pointsModel = new PointsModel({
@@ -37,6 +41,9 @@ const filterPresenter = new FilterPresenter({
   filterModel,
 });
 
+
+
+
 const newPointButtonComponent = new NewPointButtonView({
   onClick: handleNewPointButtonClick
 });
@@ -53,10 +60,10 @@ function handleNewPointButtonClick() {
 pointsModel.init()
   .finally(() => {
     render(newPointButtonComponent, tripMainElement);
+    // render (new TripInfoView(pointsModel), siteTripInfoElement, RenderPosition.AFTERBEGIN);
+    // tripInfoPresenter.init();
   });
 
 filterPresenter.init();
-
 eventsListPresenter.init();
-
 

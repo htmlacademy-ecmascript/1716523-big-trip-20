@@ -6,6 +6,7 @@ dayjs.extend(duration);
 
 const MSEC_IN_HOUR = 3600000;
 const MSEC_IN_DAY = 86400000;
+const DESTINATIONS_TITLE_LENGTH = 3;
 
 const DATE_FORMAT = 'MMM DD';
 const TIME_FORMAT = 'hh:mm';
@@ -81,7 +82,33 @@ const eventsSort = {
   },
 };
 
+// function getTripInfoDestinations(points, destinations) {
+//   const pointsDestinationIds = [];
+//   points.forEach((point) => {
+//     pointsDestinationIds.push(point.destination);
+//   });
+//   let destinationNames = [];
+//   destinations.forEach((destination) => {
+//     destinationNames.push(destination)
+//   })
+
+
+//   });
+//   console.log(pointsDestinationIds);
+//   console.log(destinationNames, 'names');
+// }
+// destination = destinations.find((el) => point.destination === el.id);
+
+
+function getTripInfoDestinations (points, destinations) {
+  const destinationNames = points.map((point) =>
+    destinations.find((el) => point.destination === el.id).name);
+  console.log(destinationNames, 'efgfvfv')
+
+  return destinationNames.length <= DESTINATIONS_TITLE_LENGTH ? destinationNames.join('&nbsp;&mdash;&nbsp') :
+    `${destinationNames.at(0)}'&nbsp;&mdash;&nbsp'...'&nbsp;&mdash;&nbsp'${destinationNames.at(-1)}`;
+}
 
 export { editEventsDate,
   editEventsTime, editFullDate,
-  filter, eventsSort, filterType, getPointDuration};
+  filter, eventsSort, filterType, getPointDuration, getTripInfoDestinations};
