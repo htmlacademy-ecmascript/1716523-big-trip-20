@@ -1,5 +1,5 @@
 
-import { editFullDate } from '../utils';
+import { editFullDate, isEventStateCorrect } from '../utils';
 import AbstractStateFulView from '../framework/view/abstract-stateful-view';
 import flatpickr from 'flatpickr';
 
@@ -171,20 +171,24 @@ export default class NewPointItemView extends AbstractStateFulView {
   datepicker = null;
 
 
-  constructor({point, offer, destinations}, onFormSubmit, onFormDelete, onAddNewPoint) {
+  constructor({ offer, destinations}, onFormSubmit, onFormDelete, onAddNewPoint) {
     super();
-    this._setState(NewPointItemView.parseEventToState({
-      basePrice: '',
-      dateFrom: dayjs().toDate(),
-      dateTo: dayjs().toDate(),
-      destination: '',
-      id: 99,
-      isFavorite: true,
-      offers: [],
-      type: offer[0].type,
+    if(offer.length && destinations.length) {
+      this._setState(NewPointItemView.parseEventToState({
+        basePrice: '',
+        dateFrom: dayjs().toDate(),
+        dateTo: dayjs().toDate(),
+        destination: '',
+        id: 99,
+        isFavorite: true,
+        offers: [],
+        type: offer[0].type,
+      }
+      ));
+    } else {
+      return;
     }
-    ));
-    this.event = point;
+
     this.offer = offer;
     this.destinations = destinations;
     this.handleFormSubmit = onFormSubmit;
@@ -222,9 +226,7 @@ export default class NewPointItemView extends AbstractStateFulView {
         ...this._state,
         destination: changedDestinationId,
       });
-    } else {
-      evt.target.parentElement.setAttribute('style', 'border-bottom: 2px solid red');
-      this.element.querySelector('.event__save-btn').setAttribute('disabled', true);
+      this.setSaveButtonState(isEventStateCorrect(this._state));
     }
   };
 
@@ -242,6 +244,7 @@ export default class NewPointItemView extends AbstractStateFulView {
       ...this._state,
       dateFrom: userDateFrom,
     });
+    this.setSaveButtonState(isEventStateCorrect(this._state));
   };
 
   #dateToChangeHandler = ([userDateTo]) => {
@@ -249,6 +252,7 @@ export default class NewPointItemView extends AbstractStateFulView {
       ...this._state,
       dateTo: userDateTo,
     });
+    this.setSaveButtonState(isEventStateCorrect(this._state));
   };
 
   setDateFromPicker() {
@@ -273,18 +277,12 @@ export default class NewPointItemView extends AbstractStateFulView {
   }
 
   changePriceHandler = (evt) => {
-    if (evt.target.value) {
-      evt.preventDefault();
-      this._setState({
-        ...this._state,
-        basePrice: parseInt(evt.target.value, 10)
-      });
-      evt.target.parentElement.removeAttribute('style', 'border-bottom: 2px solid red');
-      this.element.querySelector('.event__save-btn').removeAttribute('disabled', true);
-    } else {
-      evt.target.parentElement.setAttribute('style', 'border-bottom: 2px solid red');
-      this.element.querySelector('.event__save-btn').setAttribute('disabled', true);
-    }
+    evt.preventDefault();
+    this._setState({
+      ...this._state,
+      basePrice: parseInt(evt.target.value, 10)
+    });
+    this.setSaveButtonState(isEventStateCorrect(this._state));
   };
 
   chooseOffersHandler = (evt) => {
@@ -336,6 +334,14 @@ export default class NewPointItemView extends AbstractStateFulView {
       type: evt.target.value,
     });
     evt.target.setAttribute('checked', true);
+  };
+
+  setSaveButtonState = (eventState) => {
+    if (eventState) {
+      this.element.querySelector('.event__save-btn').removeAttribute('disabled');
+    } else {
+      this.element.querySelector('.event__save-btn').setAttribute('disabled', 'true');
+    }
   };
 
   static parseEventToState = (point) => ({

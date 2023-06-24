@@ -3,11 +3,11 @@ import AbstractView from '../framework/view/abstract-view';
 import { SortType } from '../const';
 
 const enabledSortType = {
-  [SortType.DAY]: 'true',
-  [SortType.EVENT]: 'false',
-  [SortType.TIME]: 'true',
-  [SortType.PRICE]: 'true',
-  [SortType.OFFERS]: 'false',
+  day: 'true',
+  event: 'false',
+  time: 'true',
+  price: 'true',
+  offers: 'false',
 };
 
 function getSortItem(sortItem) {
@@ -20,7 +20,7 @@ function getSortItem(sortItem) {
   value="sort-${sortItem.type}"
   data-sort-type="${sortItem.type}"
   ${(sortItem.isChecked) ? 'checked' : ''}
-  ${(sortItem.isDisabled) ? 'disabled' : ''}
+  ${sortItem.isDisabled === 'false' ? 'disabled' : ''}
   >
   <label class="trip-sort__btn"
   for="sort-${sortItem.type}">${sortItem.type}</label>
@@ -29,7 +29,7 @@ function getSortItem(sortItem) {
 
 function createSortTemplate({sortMap}) {
   return `
-  <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
+  <form class="trip-events__trip-sort  trip-sort" action="#" method="get" >
   ${sortMap.map((sortItem) => getSortItem(sortItem)).join('')}
   </form>
   `;
@@ -44,7 +44,7 @@ export default class TripSortView extends AbstractView {
     this.#sortMap = Object.values(SortType).map((type) => ({
       type,
       isChecked: (type === sortType),
-      isDisabled: !enabledSortType[type]
+      isDisabled: enabledSortType[type]
     }));
 
     this.#onSortTypeChange = onSortTypeChange;

@@ -1,6 +1,6 @@
 
 import AbstractView from '../framework/view/abstract-view';
-import { getTripInfoDestinations } from '../utils';
+import { getTripInfoDestinations, getTripInfoCost, getPointsTotalCost } from '../utils';
 
 function createTripInfoTemplate (points, offers, destinations) {
 
@@ -13,7 +13,7 @@ function createTripInfoTemplate (points, offers, destinations) {
   </div>
 
   <p class="trip-info__cost">
-    Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+    Total: &euro;&nbsp;<span class="trip-info__cost-value">${getTripInfoCost(points) + getPointsTotalCost(points, offers)}</span>
   </p>
 </section>`
   );
