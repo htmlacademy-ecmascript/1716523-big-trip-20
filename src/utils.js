@@ -44,6 +44,14 @@ function getPointDuration(dateFrom, dateTo) {
   return pointDuration;
 }
 
+function isPeriodCorrect (startDate, endDate) {
+  return startDate <= endDate;
+}
+
+function isEventStateCorrect ({destination, dateFrom, dateTo, basePrice}) {
+  return destination && basePrice && dateFrom && dateTo && isPeriodCorrect(dateFrom.getTime(), dateTo.getTime());
+}
+
 const filterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -53,9 +61,9 @@ const filterType = {
 
 const filter = {
   [filterType.EVERYTHING]: (points) => [...points],
-  [filterType.FUTURE]:(points) => points.filter((point) => isPointFuture(point)),
-  [filterType.PRESENT]:(points) => points.filter((point) => isPointPresent(point)),
-  [filterType.PAST]:(points) => points.filter((point) => isPointPast(point)),
+  [filterType.FUTURE]:(points) => [...points].filter((point) => isPointFuture(point)),
+  [filterType.PRESENT]:(points) => [...points].filter((point) => isPointPresent(point)),
+  [filterType.PAST]:(points) => [...points].filter((point) => isPointPast(point)),
 };
 
 function isPointFuture(point) {
@@ -91,6 +99,49 @@ function getTripInfoDestinations (points, destinations) {
     `${destinationNames.at(0)}'&nbsp;&mdash;&nbsp'...'&nbsp;&mdash;&nbsp'${destinationNames.at(-1)}`;
 }
 
-export { editEventsDate,
-  editEventsTime, editFullDate,
-  filter, eventsSort, filterType, getPointDuration, getTripInfoDestinations};
+function getTripInfoDates(points) {
+  const pointsDatesFrom = points.map((point) => editEventsDate(point.dateFrom));
+
+  return `${pointsDatesFrom.at(0)}&nbsp;&mdash;&nbsp;${pointsDatesFrom.at(-1)}`;
+}
+
+function getTripInfoCost (points) {
+  let totalPrice = 0;
+  points.forEach((point) => {
+    totalPrice += Number(point.basePrice);
+  });
+  return totalPrice;
+}
+
+function getPointsTotalCost (points, offers) {
+  let totalSum = 0;
+  points.forEach((point) => {
+    totalSum += getPointOffersSum(point, offers);
+  });
+  return totalSum;
+}
+
+function getPointOffersSum(point, offers) {
+  const currentOffersType = offers.find((offer) => point.type === offer.type);
+  const choosenOffersObj = point.offers.map((id) => currentOffersType.offers.find((el) => id === el.id));
+  let offersSum = 0;
+  choosenOffersObj.forEach((el) => {
+    offersSum += Number(el.price);
+  });
+  return offersSum;
+}
+
+export {
+  editEventsDate,
+  isPeriodCorrect,
+  editEventsTime,
+  editFullDate,
+  filter,
+  eventsSort,
+  filterType,
+  getPointDuration,
+  getTripInfoDestinations,
+  isEventStateCorrect,
+  getTripInfoCost,
+  getPointsTotalCost,
+  getTripInfoDates };

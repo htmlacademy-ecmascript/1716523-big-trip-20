@@ -1,9 +1,10 @@
 
-import { editFullDate } from '../utils';
+import { editFullDate, isEventStateCorrect } from '../utils';
 import AbstractStateFulView from '../framework/view/abstract-stateful-view';
 import flatpickr from 'flatpickr';
 
 import 'flatpickr/dist/flatpickr.min.css';
+
 
 function createTripEventsEditItemTemplate ({state, offerObj, destinations}) {
   const point = state;
@@ -132,7 +133,7 @@ function createTripEventsEditItemTemplate ({state, offerObj, destinations}) {
         <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit"${point.destination && point.basePrice ? '' : 'disabled'}>
+      <button class="event__save-btn  btn  btn--blue" type="submit">
       ${point.isSaving ? 'saving...' : 'save'}
       </button>
       <button class="event__reset-btn" type="reset">
@@ -215,9 +216,7 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
         ...this._state,
         destination: changedDestinationId,
       });
-    } else {
-      evt.target.parentElement.setAttribute('style', 'border-bottom: 2px solid red');
-      this.element.querySelector('.event__save-btn').setAttribute('disabled', true);
+      this.setSaveButtonState(isEventStateCorrect(this._state));
     }
   };
 
@@ -234,8 +233,8 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
     this._setState({
       ...this._state,
       dateFrom: userDateFrom,
-
     });
+    this.setSaveButtonState(isEventStateCorrect(this._state));
   };
 
   #dateToChangeHandler = ([userDateTo]) => {
@@ -243,6 +242,7 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
       ...this._state,
       dateTo: userDateTo,
     });
+    this.setSaveButtonState(isEventStateCorrect(this._state));
   };
 
   setDateFromPicker() {
@@ -259,7 +259,7 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
     this.datepicker = flatpickr(
       this.element.querySelector('#event-end-time-1'), {
         dateFormat: 'd/m/y H:i',
-        minDate: 'today',
+        minDate: this._state.dateFrom,
         defaultDate: this._state.dateTo,
         onChange: this.#dateToChangeHandler,
       }
@@ -267,18 +267,12 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
   }
 
   changePriceHandler = (evt) => {
-    if (evt.target.value) {
-      evt.preventDefault();
-      this._setState({
-        ...this._state,
-        basePrice: parseInt(evt.target.value, 10)
-      });
-      evt.target.parentElement.removeAttribute('style', 'border-bottom: 2px solid red');
-      this.element.querySelector('.event__save-btn').removeAttribute('disabled', true);
-    } else {
-      evt.target.parentElement.setAttribute('style', 'border-bottom: 2px solid red');
-      this.element.querySelector('.event__save-btn').setAttribute('disabled', true);
-    }
+    evt.preventDefault();
+    this._setState({
+      ...this._state,
+      basePrice: parseInt(evt.target.value, 10)
+    });
+    this.setSaveButtonState(isEventStateCorrect(this._state));
   };
 
   chooseOffersHandler = (evt) => {
@@ -340,6 +334,14 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
     evt.target.setAttribute('checked', true);
   };
 
+  setSaveButtonState = (eventState) => {
+    if (eventState) {
+      this.element.querySelector('.event__save-btn').removeAttribute('disabled');
+    } else {
+      this.element.querySelector('.event__save-btn').setAttribute('disabled', 'true');
+    }
+  };
+
   static parseEventToState = ({point}) => ({
     ...point,
     isDeleting: false,
@@ -354,3 +356,4 @@ export default class TripEventsEditItemView extends AbstractStateFulView {
 
 }
 export {createTripEventsEditItemTemplate};
+

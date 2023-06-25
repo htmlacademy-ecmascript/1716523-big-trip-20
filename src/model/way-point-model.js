@@ -24,6 +24,7 @@ export default class PointsModel extends Observable{
       this.#points = [];
       this.#offers = [];
       this.#destinations = [];
+      throw new Error('server is unavailable');
     }
     this._notify(UpdateType.INIT);
   }
