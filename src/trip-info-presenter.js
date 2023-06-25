@@ -10,22 +10,19 @@ export default class TripInfoPresenter {
   #destinations = null;
   #offers = null;
 
-  #duration = 0;
-  #sum = 0;
-
   #tripInfoComponent = null;
 
-  constructor(container, points, offers, destinations, pointsModel) {
+  constructor(container, pointsModel) {
 
     this.#pointsModel = pointsModel;
     this.#container = container;
+    this.#pointsModel.addObserver(this.#handleModelEvent);
+  }
+
+  init(points, offers, destinations) {
     this.#points = points;
     this.#offers = offers;
     this.#destinations = destinations;
-  }
-
-  init() {
-    this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
   renderHeader() {
@@ -36,69 +33,22 @@ export default class TripInfoPresenter {
     remove(this.#tripInfoComponent);
   }
 
-  #render = () => {
+  #render = (points, offers, destinations) => {
 
     const prevTripInfoComponent = this.#tripInfoComponent;
-    console.log(prevTripInfoComponent, 'ddd')
-    this.#tripInfoComponent = new TripInfoView(this.#points, this.#offers, this.#destinations);
+    this.#tripInfoComponent = new TripInfoView(points, offers, destinations);
 
     if (prevTripInfoComponent === null) {
       render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
       return;
     }
 
-    // replace(this.#tripInfoComponent, prevTripInfoComponent);
-    replace(prevTripInfoComponent, this.#tripInfoComponent);
-    remove(this.#tripInfoComponent);
-    // remove(prevTripInfoComponent);
+    replace(this.#tripInfoComponent, prevTripInfoComponent);
+    remove(prevTripInfoComponent);
   };
 
   #handleModelEvent = () => {
-    this.#render();
+    this.#render(this.#points, this.#offers, this.#destinations);
   };
 }
 
-// export default class TripInfoPresenter {
-//   #container = null;
-//   #tripInfoComponent = null;
-//   #points = null;
-//   #destinations = null;
-//   #offers = null;
-
-//   constructor (container) {
-//     this.#container = container;
-//   }
-
-//   init(points, destinations, offers) {
-
-//     const previousInfoComponent = this.#tripInfoComponent;
-
-//     this.#points = points;
-//     this.#destinations = destinations;
-//     this.#offers = offers;
-
-//     this.#tripInfoComponent = new TripInfoView (this.#points, this.#destinations, this.#offers);
-
-//     if (this.#points === 0) {
-//       this.#tripInfoComponent.destroy();
-//     }
-
-//     if (previousInfoComponent === null) {
-//       render(this.#tripInfoComponent, this.#container, RenderPosition.AFTERBEGIN);
-//       return;
-//     }
-
-//     replace(this.#tripInfoComponent, previousInfoComponent);
-
-//     remove(previousInfoComponent);
-//   }
-
-//   destroy() {
-//     if (this.#tripInfoComponent === null) {
-//       return;
-//     }
-
-//     remove(this.#tripInfoComponent);
-//     this.#tripInfoComponent = null;
-//   }
-// }

@@ -27,69 +27,6 @@ export default class EventPointPresenter {
     this.#handleModeChange = onModeChange;
   }
 
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      this.#replaceFormToCard();
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
-    }
-  };
-
-  #showFormElement = () => {
-    this.#replaceCardToForm();
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #submitFormElement = (updatedPoint) => {
-    this.handleDataChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      updatedPoint,
-    );
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #hideFormElement = () => {
-    this.editItemComponent.reset(this.point);
-    this.#replaceFormToCard();
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-  };
-
-  #deletePoint = (point) => {
-    this.handleDataChange(
-      UserAction.DELETE_POINT,
-      UpdateType.MINOR,
-      point,
-    );
-  };
-
-  #addPoint = (point) => {
-    this.handleDataChange(
-      UserAction.ADD_POINT,
-      UpdateType.MINOR,
-      point,
-    );
-  };
-
-  #replaceCardToForm() {
-    replace(this.editItemComponent, this.itemComponent);
-    this.#handleModeChange();
-    this.#mode = Mode.EDITING;
-  }
-
-  #replaceFormToCard() {
-    replace(this.itemComponent, this.editItemComponent);
-    this.#mode = Mode.DEFAULT;
-  }
-
-  #favoriteToggle = () => {
-    this.handleDataChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.PATCH,
-      {...this.point, isFavorite: !this.point.isFavorite},
-    );
-  };
-
   init(point) {
     this.point = point;
     const prevItemComponent = this.itemComponent;
@@ -173,4 +110,67 @@ export default class EventPointPresenter {
       this.#replaceFormToCard();
     }
   }
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#replaceFormToCard();
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+    }
+  };
+
+  #showFormElement = () => {
+    this.#replaceCardToForm();
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #submitFormElement = (updatedPoint) => {
+    this.handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      updatedPoint,
+    );
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #hideFormElement = () => {
+    this.editItemComponent.reset(this.point);
+    this.#replaceFormToCard();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+  };
+
+  #deletePoint = (point) => {
+    this.handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
+  #addPoint = (point) => {
+    this.handleDataChange(
+      UserAction.ADD_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
+
+  #replaceCardToForm() {
+    replace(this.editItemComponent, this.itemComponent);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
+  }
+
+  #replaceFormToCard() {
+    replace(this.itemComponent, this.editItemComponent);
+    this.#mode = Mode.DEFAULT;
+  }
+
+  #favoriteToggle = () => {
+    this.handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.point, isFavorite: !this.point.isFavorite},
+    );
+  };
 }

@@ -1,4 +1,5 @@
 
+
 import AbstractView from '../framework/view/abstract-view';
 
 function createFilterItem(filter, currentFilterType) {

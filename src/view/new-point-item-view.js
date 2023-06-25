@@ -173,7 +173,7 @@ export default class NewPointItemView extends AbstractStateFulView {
 
   constructor({ offer, destinations}, onFormSubmit, onFormDelete, onAddNewPoint) {
     super();
-    if(offer.length && destinations.length) {
+    if (offer.length && destinations.length) {
       this._setState(NewPointItemView.parseEventToState({
         basePrice: '',
         dateFrom: dayjs().toDate(),
@@ -302,7 +302,7 @@ export default class NewPointItemView extends AbstractStateFulView {
       offersIds.push(inputTarget.id);
     }
 
-    if(inputTarget.hasAttribute('checked')) {
+    if (inputTarget.hasAttribute('checked')) {
       inputTarget.removeAttribute('checked');
     } else{
       inputTarget.setAttribute('checked', true);

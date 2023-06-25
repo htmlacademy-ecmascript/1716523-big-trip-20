@@ -61,9 +61,9 @@ const filterType = {
 
 const filter = {
   [filterType.EVERYTHING]: (points) => [...points],
-  [filterType.FUTURE]:(points) => points.filter((point) => isPointFuture(point)),
-  [filterType.PRESENT]:(points) => points.filter((point) => isPointPresent(point)),
-  [filterType.PAST]:(points) => points.filter((point) => isPointPast(point)),
+  [filterType.FUTURE]:(points) => [...points].filter((point) => isPointFuture(point)),
+  [filterType.PRESENT]:(points) => [...points].filter((point) => isPointPresent(point)),
+  [filterType.PAST]:(points) => [...points].filter((point) => isPointPast(point)),
 };
 
 function isPointFuture(point) {
@@ -99,7 +99,13 @@ function getTripInfoDestinations (points, destinations) {
     `${destinationNames.at(0)}'&nbsp;&mdash;&nbsp'...'&nbsp;&mdash;&nbsp'${destinationNames.at(-1)}`;
 }
 
-function getTripInfoCost (points, offers) {
+function getTripInfoDates(points) {
+  const pointsDatesFrom = points.map((point) => editEventsDate(point.dateFrom));
+
+  return `${pointsDatesFrom.at(0)}&nbsp;&mdash;&nbsp;${pointsDatesFrom.at(-1)}`;
+}
+
+function getTripInfoCost (points) {
   let totalPrice = 0;
   points.forEach((point) => {
     totalPrice += Number(point.basePrice);
@@ -110,8 +116,8 @@ function getTripInfoCost (points, offers) {
 function getPointsTotalCost (points, offers) {
   let totalSum = 0;
   points.forEach((point) => {
-    totalSum += getPointOffersSum(point, offers)
-  })
+    totalSum += getPointOffersSum(point, offers);
+  });
   return totalSum;
 }
 
@@ -137,4 +143,5 @@ export {
   getTripInfoDestinations,
   isEventStateCorrect,
   getTripInfoCost,
-  getPointsTotalCost };
+  getPointsTotalCost,
+  getTripInfoDates };
