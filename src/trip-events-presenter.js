@@ -90,7 +90,6 @@ export default class TripEventsListPresenter {
     return this.pointsModel.getOffers();
   }
 
-
   init() {
 
     this.tripInfoPresenter = new TripInfoPresenter(siteTripInfoElement, this.pointsModel);
